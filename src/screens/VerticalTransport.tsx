@@ -41,13 +41,13 @@ export default function VerticalTransportScreen() {
 
   return (
     <ImageBackground source={mobilityBg} style={styles.root} resizeMode="cover">
-      <Image source={logo} style={styles.logo} resizeMode="contain" />
+      <Image source={logo} style={[styles.logo, !isTablet && styles.logoPhone]} resizeMode="contain" />
 
       {/* Title */}
-      <View style={styles.titleRow}>
-        <Image source={RVector} style={styles.vector} resizeMode="contain" />
-        <Text style={styles.title}>{active.label}</Text>
-        <Image source={LVector} style={styles.vector} resizeMode="contain" />
+      <View style={[styles.titleRow, !isTablet && styles.titleRowPhone]}>
+        <Image source={RVector} style={[styles.vector, !isTablet && styles.vectorPhone]} resizeMode="contain" />
+        <Text style={[styles.title, !isTablet && styles.titlePhone]}>{active.label}</Text>
+        <Image source={LVector} style={[styles.vector, !isTablet && styles.vectorPhone]} resizeMode="contain" />
       </View>
 
       {isTablet ? (
@@ -127,6 +127,7 @@ const styles = StyleSheet.create({
   root: { flex: 1 },
   center: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#0b1020' },
   logo: { position: 'absolute', width: 70, height: 40, top: 40, right: 24, zIndex: 20 },
+  logoPhone: { width: 52, height: 30, top: 20, right: 16 },
   titleRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -136,7 +137,9 @@ const styles = StyleSheet.create({
     paddingBottom: 8,
     paddingHorizontal: 60,
   },
+  titleRowPhone: { paddingTop: 22, gap: 10, paddingHorizontal: 40 },
   vector: { width: 56, height: 28 },
+  vectorPhone: { width: 40, height: 18 },
   title: {
     color: 'white',
     fontSize: 22,
@@ -145,6 +148,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     flexShrink: 1,
   },
+  titlePhone: { fontSize: 16, letterSpacing: 2 },
   tabletRow: { flex: 1, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 24, gap: 16 },
   tabletVideoWrap: { flex: 1, alignItems: 'center', justifyContent: 'center' },
   videoCard: {

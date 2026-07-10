@@ -39,9 +39,9 @@ export default function HomeScreen() {
   const logoH = select({ phone: 34, tablet: 48, large: 60 });
 
   // White rounded-bottom logo card (.white-header1).
-  const cardW = select({ phone: 78, tablet: 90, large: 112 });
-  const cardH = select({ phone: 88, tablet: 104, large: 126 });
-  const cardRadius = select({ phone: 26, tablet: 30, large: 40 });
+  const cardW = select({ phone: 62, tablet: 90, large: 112 });
+  const cardH = select({ phone: 70, tablet: 104, large: 126 });
+  const cardRadius = select({ phone: 20, tablet: 30, large: 40 });
 
   const labelSize = select({ phone: 9, tablet: 10, large: 11 });
 

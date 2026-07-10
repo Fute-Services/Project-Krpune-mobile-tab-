@@ -93,7 +93,11 @@ export default function LocationScreen() {
             style={[styles.marker, { top: `${m.top}%`, left: `${m.left}%` }]}
           >
             {m.image ? (
-              <Image source={locationLogo} style={styles.markerLogo} resizeMode="contain" />
+              <Image
+                source={locationLogo}
+                style={[styles.markerLogo, isPhone && styles.markerLogoPhone]}
+                resizeMode="contain"
+              />
             ) : (
               <View style={[styles.labelPill, isPhone && styles.labelPillPhone]}>
                 <Text style={[styles.labelText, isPhone && styles.labelTextPhone]} numberOfLines={1}>
@@ -119,10 +123,11 @@ export default function LocationScreen() {
                 style={[
                   styles.filterBtn,
                   isTablet && styles.filterBtnTablet,
+                  isPhone && styles.filterBtnPhone,
                   active ? styles.filterBtnActive : styles.filterBtnIdle,
                 ]}
               >
-                <Text style={styles.filterText}>{filter}</Text>
+                <Text style={[styles.filterText, isPhone && styles.filterTextPhone]}>{filter}</Text>
               </Pressable>
             );
           })}
@@ -154,9 +159,10 @@ const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: '#000', overflow: 'hidden' },
 
   // Markers
-  markerLayerPhone: { position: 'absolute', top: 66, bottom: 80, left: 46, right: 46 },
+  markerLayerPhone: { position: 'absolute', top: 98, bottom: 80, left: 46, right: 46 },
   marker: { position: 'absolute', alignItems: 'center' },
   markerLogo: { width: 90, height: 56, marginBottom: 4 },
+  markerLogoPhone: { width: 60, height: 38, marginBottom: 2 },
   labelPill: {
     backgroundColor: 'rgba(0,0,0,0.6)',
     borderWidth: 1,
@@ -212,9 +218,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   filterBtnTablet: { minWidth: 140, paddingHorizontal: 28 },
+  filterBtnPhone: { minWidth: 88, paddingHorizontal: 14, paddingVertical: 7 },
   filterBtnActive: { backgroundColor: '#4581C4', borderColor: 'white' },
   filterBtnIdle: { backgroundColor: '#485460', borderColor: 'transparent' },
   filterText: { color: 'white', fontSize: 14, fontWeight: '500' },
+  filterTextPhone: { fontSize: 12 },
 
   // Zoom controls
   zoomWrap: {

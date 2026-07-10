@@ -62,7 +62,7 @@ export default function ProjectInfoScreen() {
         ]}
         showsVerticalScrollIndicator={false}
       >
-        <View style={[styles.inner, isTablet && styles.innerTablet]}>
+        <View style={[styles.inner, isTablet ? styles.innerTablet : styles.innerPhone]}>
           {/* TOP SECTION */}
           <Animated.View style={[styles.topSection, topDown]}>
             <Text style={styles.topPara}>
@@ -78,7 +78,7 @@ export default function ProjectInfoScreen() {
 
           {/* Strategic Location */}
           <Animated.View style={[styles.block, leftIn]}>
-            <Image source={info1} style={styles.circleImgSm} />
+            <Image source={info1} style={[styles.circleImgSm, !isTablet && styles.circlePhoneSm]} />
             <View style={styles.blockBody}>
               <View style={styles.headerRow}>
                 <Text style={styles.h2}>Strategic Location</Text>
@@ -98,7 +98,7 @@ export default function ProjectInfoScreen() {
 
           {/* Connectivity */}
           <Animated.View style={[styles.block, leftIn]}>
-            <Image source={info2} style={styles.circleImgMd} />
+            <Image source={info2} style={[styles.circleImgMd, !isTablet && styles.circlePhoneMd]} />
             <View style={styles.blockBody}>
               <View style={styles.headerRow}>
                 <Text style={styles.h2}>Connectivity</Text>
@@ -123,7 +123,7 @@ export default function ProjectInfoScreen() {
 
           {/* Design Excellence */}
           <Animated.View style={[styles.block, rightIn]}>
-            <Image source={info3} style={styles.circleImgLg} />
+            <Image source={info3} style={[styles.circleImgLg, !isTablet && styles.circlePhoneLg]} />
             <View style={styles.blockBody}>
               <View style={styles.headerRow}>
                 <Text style={styles.h2}>Design Excellence</Text>
@@ -153,6 +153,8 @@ const styles = StyleSheet.create({
   content: { paddingHorizontal: 20 },
   inner: { width: '100%', alignSelf: 'center' },
   innerTablet: { maxWidth: 900 },
+  // Constrain line length + tighten vertical rhythm on phone-landscape.
+  innerPhone: { maxWidth: 620 },
   topSection: { marginBottom: 28, alignItems: 'center' },
   topPara: {
     color: '#fff',
@@ -190,6 +192,10 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderColor: 'rgba(255,255,255,0.1)',
   },
+  // Compact circles for phone-landscape.
+  circlePhoneSm: { width: 72, height: 72, borderRadius: 36, borderWidth: 2 },
+  circlePhoneMd: { width: 88, height: 88, borderRadius: 44, borderWidth: 2 },
+  circlePhoneLg: { width: 104, height: 104, borderRadius: 52, borderWidth: 2 },
   headerRow: {
     flexDirection: 'row',
     alignItems: 'center',

@@ -17,7 +17,7 @@ export default function AmenitiesScreen() {
       <View
         style={[
           styles.buttons,
-          { left: isTablet ? 150 : 24, transform: [{ translateY: isTablet ? -140 : -164 }] },
+          { left: isTablet ? 150 : 24, transform: [{ translateY: isTablet ? -140 : -104 }] },
         ]}
       >
         <AmenitiesButtons />

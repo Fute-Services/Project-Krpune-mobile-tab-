@@ -55,10 +55,10 @@ export default function MobilityScreen() {
       {isTablet && <Image source={logo} style={styles.logo} resizeMode="contain" />}
 
       {/* Title */}
-      <View style={styles.titleRow}>
-        <Image source={RVector} style={styles.vector} resizeMode="contain" />
-        <Text style={styles.title}>{current?.title}</Text>
-        <Image source={LVector} style={styles.vector} resizeMode="contain" />
+      <View style={[styles.titleRow, !isTablet && styles.titleRowPhone]}>
+        <Image source={RVector} style={[styles.vector, !isTablet && styles.vectorPhone]} resizeMode="contain" />
+        <Text style={[styles.title, !isTablet && styles.titlePhone]}>{current?.title}</Text>
+        <Image source={LVector} style={[styles.vector, !isTablet && styles.vectorPhone]} resizeMode="contain" />
       </View>
 
       {/* Main media */}
@@ -102,7 +102,9 @@ const styles = StyleSheet.create({
     gap: 16,
     marginTop: 56,
   },
+  titleRowPhone: { marginTop: 26, gap: 10 },
   vector: { width: 64, height: 28 },
+  vectorPhone: { width: 40, height: 18 },
   title: {
     color: 'white',
     fontSize: 20,
@@ -111,6 +113,7 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     textAlign: 'center',
   },
+  titlePhone: { fontSize: 15, letterSpacing: 2 },
   stage: { alignItems: 'center', justifyContent: 'center' },
   stageTablet: { flex: 1, paddingHorizontal: 24 },
   stagePhone: { flex: 1, paddingHorizontal: 16 },
