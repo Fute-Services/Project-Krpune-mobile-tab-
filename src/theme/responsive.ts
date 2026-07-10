@@ -24,6 +24,12 @@ export function useResponsive() {
   const { width, height } = useWindowDimensions();
   const isLandscape = width > height;
 
+  // Device class must use the SHORTEST side (Material "smallest width"), NOT `width`.
+  // The app is landscape-locked, so a phone's `width` is its long edge (~800-950dp)
+  // which would wrongly read as a tablet. The short edge (a phone's height, ~360-430dp;
+  // a tablet's ~600-800dp) is what actually distinguishes the two.
+  const shortest = Math.min(width, height);
+
   let isTablet: boolean;
   let isLarge: boolean;
   if (VARIANT === 'mobile') {
@@ -31,11 +37,12 @@ export function useResponsive() {
     isLarge = false;
   } else if (VARIANT === 'tablet') {
     isTablet = true;
-    isLarge = width >= BREAKPOINTS.large; // large tier bade tablets par bana rahega
+    isLarge = width >= BREAKPOINTS.large; // tablet build unchanged
   } else {
-    // dev / Expo Go: purana width-based behavior (fallback)
-    isTablet = width >= BREAKPOINTS.tablet;
-    isLarge = width >= BREAKPOINTS.large;
+    // dev / Expo Go (no build flag): detect by shortest side so a phone in
+    // landscape is never mistaken for a tablet.
+    isTablet = shortest >= BREAKPOINTS.tablet;
+    isLarge = shortest >= BREAKPOINTS.large;
   }
   const isPhone = !isTablet;
 
