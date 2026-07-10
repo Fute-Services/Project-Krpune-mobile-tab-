@@ -39,3 +39,6 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+# pre-optimization image backups (large, not needed in repo)
+scripts/.img-backup/
