@@ -7,6 +7,33 @@ import vrTour from '../offline/data/vr-tour.json';
 
 type Scene = { id: string; label: string; panorama: string };
 
+// Proper per-scene names. The JSON has no `title`; the previous code used the
+// first hotspot's tooltip, which is the DESTINATION of that hotspot — so every
+// pill showed the wrong/duplicated name (e.g. "dropoff" scene labelled "Entry Gate").
+const SCENE_LABELS: Record<string, string> = {
+  entrygate: 'Entry Gate',
+  dropoff: 'Drop Off',
+  retail: 'Retail',
+  reception: 'Reception',
+  cafeteria: 'Cafeteria',
+  'Lift Lobby': 'Lift Lobby',
+  podium1: 'Podium 1',
+  podium2: 'Podium 2',
+  terrace1: 'Terrace 1',
+  terrace2: 'Terrace 2',
+  terrace: 'Terrace',
+  terrace_sports: 'Terrace Sports',
+};
+
+function labelFor(id: string): string {
+  if (SCENE_LABELS[id]) return SCENE_LABELS[id];
+  // Fallback: prettify the id (e.g. "some_scene" -> "Some Scene").
+  return id
+    .replace(/[_-]+/g, ' ')
+    .replace(/\b\w/g, (c) => c.toUpperCase())
+    .trim();
+}
+
 export default function VRScreen() {
   const insets = useSafeAreaInsets();
   const { isPhone } = useResponsive();
@@ -15,7 +42,7 @@ export default function VRScreen() {
     const raw = (vrTour as any).scenes || {};
     return Object.entries(raw).map(([id, v]: [string, any]) => ({
       id,
-      label: v?.hotSpots?.[0]?.createTooltipArgs?.text || id,
+      label: labelFor(id),
       panorama: v?.panorama,
     }));
   }, []);

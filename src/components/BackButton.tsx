@@ -18,7 +18,7 @@ export default function BackButton({ to }: { to?: keyof RootStackParamList }) {
         style={({ pressed }) => [styles.btn, pressed && { transform: [{ scale: 0.92 }] }]}
         hitSlop={10}
       >
-        <Image source={backImg} style={styles.icon} resizeMode="contain" />
+        <Image source={backImg} style={styles.icon} resizeMode="contain" tintColor="#ffffff" />
       </Pressable>
     </View>
   );
@@ -26,18 +26,22 @@ export default function BackButton({ to }: { to?: keyof RootStackParamList }) {
 
 const styles = StyleSheet.create({
   wrap: { position: 'absolute', left: 16, zIndex: 1500 },
+  // Dark glass + white arrow + white ring so it stays clearly visible on any
+  // background (light skies, white plans, dark panoramas alike).
   btn: {
     width: 44,
     height: 44,
-    borderRadius: 13,
-    backgroundColor: 'rgba(255,255,255,0.95)',
+    borderRadius: 14,
+    backgroundColor: 'rgba(15,23,42,0.6)',
+    borderWidth: 1.5,
+    borderColor: 'rgba(255,255,255,0.8)',
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.25,
+    shadowOpacity: 0.4,
     shadowRadius: 10,
-    elevation: 6,
+    elevation: 8,
   },
   icon: { width: 20, height: 20 },
 });

@@ -26,26 +26,28 @@ export default function BackButton({ to }: { to?: keyof RootStackParamList }) {
         source={backImg}
         style={isTablet ? styles.iconTablet : styles.icon}
         resizeMode="contain"
+        tintColor="#ffffff"
       />
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
+  // Dark glass + white arrow + white ring — visible on light Overview skies too.
   btn: {
-    width: 40,
-    height: 40,
-    borderRadius: 12,
-    backgroundColor: '#fff',
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.3)',
+    width: 42,
+    height: 42,
+    borderRadius: 13,
+    backgroundColor: 'rgba(15,23,42,0.6)',
+    borderWidth: 1.5,
+    borderColor: 'rgba(255,255,255,0.8)',
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.25,
+    shadowOpacity: 0.4,
     shadowRadius: 8,
-    elevation: 5,
+    elevation: 6,
   },
   btnTablet: { width: 52, height: 52, borderRadius: 14 },
   icon: { width: 18, height: 18 },

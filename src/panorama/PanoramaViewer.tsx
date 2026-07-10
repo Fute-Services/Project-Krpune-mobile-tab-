@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { View, ActivityIndicator, StyleSheet, ViewStyle } from 'react-native';
+import { View, Text, ActivityIndicator, StyleSheet, ViewStyle } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { Asset } from 'expo-asset';
 import * as FileSystem from 'expo-file-system/legacy';
@@ -28,16 +28,28 @@ function mimeOf(name: string): string {
 }
 
 /**
- * Read a bundled image as a base64 data: URI. WebView on Android cannot reliably
- * read the ExponentAsset file:// cache path ("could not be accessed"), so we
- * inline the bytes instead — fully offline, no file-access flags needed.
+ * Copy a bundled panorama into the app cache dir and return just its FILENAME
+ * (a sibling of the generated viewer HTML). Because the WebView is loaded from a
+ * file:// URL in the same dir, it can read this by relative path with
+ * allowFileAccessFromFileURLs — without inflating the ~3-5 MB image into a giant
+ * base64 data: string (the old approach, which was slow and janked on every
+ * scene switch). Returns a base64 data: URI as a fallback if the copy fails.
  */
-async function assetDataUri(mod: number): Promise<string> {
+async function panoRefInCache(mod: number): Promise<string> {
   const asset = Asset.fromModule(mod);
   await asset.downloadAsync();
   const uri = asset.localUri || asset.uri;
-  const base64 = await FileSystem.readAsStringAsync(uri, { encoding: 'base64' as any });
-  return `data:${mimeOf(uri)};base64,${base64}`;
+  try {
+    const ext = (asset.type || uri.split('.').pop() || 'jpg').replace(/[^a-z0-9]/gi, '');
+    const name = `pano_${asset.hash || asset.name}.${ext}`;
+    const dest = `${FileSystem.cacheDirectory}${name}`;
+    const info = await FileSystem.getInfoAsync(dest);
+    if (!info.exists) await FileSystem.copyAsync({ from: uri, to: dest });
+    return name; // relative filename
+  } catch {
+    const base64 = await FileSystem.readAsStringAsync(uri, { encoding: 'base64' as any });
+    return `data:${mimeOf(uri)};base64,${base64}`;
+  }
 }
 
 export default function PanoramaViewer({
@@ -49,7 +61,7 @@ export default function PanoramaViewer({
   style?: ViewStyle | ViewStyle[];
   autoRotate?: boolean;
 }) {
-  const [html, setHtml] = useState<string | null>(null);
+  const [htmlUri, setHtmlUri] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -57,11 +69,16 @@ export default function PanoramaViewer({
       try {
         const [js, css] = await Promise.all([assetText(pannellumJs), assetText(pannellumCss)]);
 
-        // Resolve the panorama image to an inline base64 data: URI (offline).
+        // Resolve the panorama to a cache-relative filename (offline) or a URL.
         const resolved = resolveAsset(imageUrl);
-        let panoUri = imageUrl;
-        if (typeof resolved === 'number') panoUri = await assetDataUri(resolved);
-        else if (resolved && 'uri' in resolved) panoUri = resolved.uri;
+        let panoRef = imageUrl;
+        let key = 'net';
+        if (typeof resolved === 'number') {
+          panoRef = await panoRefInCache(resolved);
+          key = panoRef.replace(/[^a-z0-9]/gi, '');
+        } else if (resolved && 'uri' in resolved) {
+          panoRef = resolved.uri;
+        }
 
         const doc = `<!DOCTYPE html>
 <html>
@@ -79,7 +96,7 @@ html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:#
   try {
     pannellum.viewer('panorama', {
       type: 'equirectangular',
-      panorama: ${JSON.stringify(panoUri)},
+      panorama: ${JSON.stringify(panoRef)},
       autoLoad: true,
       showZoomCtrl: true,
       showFullscreenCtrl: false,
@@ -92,7 +109,10 @@ html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:#
 </script>
 </body>
 </html>`;
-        if (!cancelled) setHtml(doc);
+        // Write the viewer HTML next to the pano so it loads as a file:// origin.
+        const htmlPath = `${FileSystem.cacheDirectory}pano-viewer-${key}.html`;
+        await FileSystem.writeAsStringAsync(htmlPath, doc);
+        if (!cancelled) setHtmlUri(htmlPath);
       } catch (e) {
         console.log('PanoramaViewer load error', e);
       }
@@ -102,10 +122,11 @@ html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:#
     };
   }, [imageUrl, autoRotate]);
 
-  if (!html) {
+  if (!htmlUri) {
     return (
       <View style={[styles.loading, style]}>
         <ActivityIndicator color="#ffffff" />
+        <Text style={styles.loadingText}>Loading panorama…</Text>
       </View>
     );
   }
@@ -113,7 +134,7 @@ html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:#
   return (
     <WebView
       originWhitelist={['*']}
-      source={{ html }}
+      source={{ uri: htmlUri }}
       style={[styles.web, style]}
       javaScriptEnabled
       domStorageEnabled
@@ -128,6 +149,7 @@ html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:#
 }
 
 const styles = StyleSheet.create({
-  loading: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#000' },
+  loading: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#000', gap: 12 },
+  loadingText: { color: 'rgba(255,255,255,0.7)', fontSize: 13, letterSpacing: 1 },
   web: { flex: 1, backgroundColor: '#000' },
 });
