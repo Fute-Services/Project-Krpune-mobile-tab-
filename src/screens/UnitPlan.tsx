@@ -185,7 +185,7 @@ export default function UnitPlanScreen({ route }: any) {
               </View>
             </View>
           )}
-          <ScrollView style={{ maxHeight: 260 }} showsVerticalScrollIndicator={false}>
+          <ScrollView style={{ maxHeight: isTablet ? 260 : 150 }} showsVerticalScrollIndicator={false}>
             {rooms.map((r) => {
               const active = activeRoom === r.name;
               return (
@@ -199,15 +199,20 @@ export default function UnitPlanScreen({ route }: any) {
         </View>
       )}
 
-      {/* Panel toggle (phone) */}
+      {/* Panel toggle (phone) — sits in the top bar beside Back so it never covers
+          the info panel below. */}
       {!isTablet && (
-        <Pressable style={[styles.iconBtn, { top: insets.top + 64, left: 14 }]} onPress={() => setPanelOpen((v) => !v)}>
+        <Pressable style={[styles.iconBtn, { top: insets.top + 8, left: 64 }]} onPress={() => setPanelOpen((v) => !v)}>
           <Text style={styles.toggleTxt}>{panelOpen ? '▲' : '▼'}</Text>
         </Pressable>
       )}
 
-      {/* Minimap: toggle 2D/3D */}
-      <Pressable style={[styles.minimap, { bottom: insets.bottom + 84 }]} onPress={toggleImage}>
+      {/* Minimap: toggle 2D/3D — dropped to the bottom-left corner on phone so it
+          clears the (shortened) room list above it. */}
+      <Pressable
+        style={[styles.minimap, { bottom: insets.bottom + (isTablet ? 84 : 18) }]}
+        onPress={toggleImage}
+      >
         {nextSrc && <Image source={nextSrc} style={styles.minimapImg} resizeMode="cover" />}
         <View style={styles.minimapLabel}>
           <Text style={styles.minimapText}>{imageIndex === 0 ? '2D' : '3D'}</Text>

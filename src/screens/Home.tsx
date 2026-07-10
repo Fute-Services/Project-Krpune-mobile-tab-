@@ -21,15 +21,17 @@ const DAY_BG =
 
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
-  const { select } = useResponsive();
+  const { select, isPhone } = useResponsive();
   const [isNight, setIsNight] = useState(true);
   const [showPdf, setShowPdf] = useState(false);
 
   const bg = resolveAsset(isNight ? NIGHT_BG : DAY_BG);
 
   // Responsive sizes — mirror web breakpoints (phone <=430, tablet <=768, desktop base).
-  const btnSize = select({ phone: 48, tablet: 54, large: 60 }); // .floating-btn 48/54/60
-  const pillGap = select({ phone: 12, tablet: 16, large: 18 }); // right-controls inner gap
+  // Phone-landscape is short, so keep the right control stack compact enough that the
+  // logo badge + pill + day/night toggle all fit without clipping.
+  const btnSize = select({ phone: 40, tablet: 54, large: 60 }); // .floating-btn
+  const pillGap = select({ phone: 10, tablet: 16, large: 18 }); // right-controls inner gap
   const rightOffset = select({ phone: 12, tablet: 20, large: 24 }); // .right-controls right
   const stackGap = select({ phone: 12, tablet: 14, large: 16 }); // pill -> toggle gap
 
@@ -76,8 +78,16 @@ export default function HomeScreen() {
         />
       </View>
 
-      {/* Right vertical control stack (.right-controls — fixed, vertically centered) */}
-      <View style={[styles.rightControls, { right: rightOffset }]}>
+      {/* Right vertical control stack (.right-controls — fixed, vertically centered).
+          On phone-landscape the height is short, so anchor the stack just below the
+          top-right logo badge instead of centring it (which would overlap the badge). */}
+      <View
+        style={[
+          styles.rightControls,
+          { right: rightOffset },
+          isPhone && { justifyContent: 'flex-start', paddingTop: cardH + 6 },
+        ]}
+      >
         <LinearGradient
           colors={['rgba(16,60,120,0.28)', 'rgba(6,36,66,0.4)']}
           style={[styles.pill, { gap: pillGap }]}

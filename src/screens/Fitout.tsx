@@ -96,7 +96,15 @@ const styles = StyleSheet.create({
 
   content: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingTop: 90, paddingBottom: 90 },
   contentTablet: { flexDirection: 'row', gap: 24, paddingHorizontal: 24 },
-  contentPhone: { flexDirection: 'column-reverse', gap: 16, paddingHorizontal: 16 },
+  // Phone-landscape is wide but short: use a side-by-side row (legend left, plan
+  // right) with tighter vertical padding so nothing overflows/clips.
+  contentPhone: {
+    flexDirection: 'row',
+    gap: 14,
+    paddingHorizontal: 16,
+    paddingTop: 54,
+    paddingBottom: 62,
+  },
 
   // Legend
   legend: {
@@ -107,7 +115,7 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   legendTablet: { width: 280, maxHeight: '80%' },
-  legendPhone: { width: '92%', maxHeight: '38%' },
+  legendPhone: { width: 250, maxHeight: '100%', padding: 12 },
   legendHeader: {
     backgroundColor: '#B5D3F1',
     borderRadius: 999,
@@ -148,7 +156,7 @@ const styles = StyleSheet.create({
   // Plan image
   plan: { alignSelf: 'center' },
   planTablet: { width: '55%', height: '85%' },
-  planPhone: { width: '95%', height: '48%' },
+  planPhone: { flex: 1, height: '100%' },
 
   // Title
   titleWrap: { position: 'absolute', bottom: 32, left: 0, right: 0, alignItems: 'center' },

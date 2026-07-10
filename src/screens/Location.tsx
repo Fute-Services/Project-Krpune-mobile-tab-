@@ -49,7 +49,7 @@ const MARKERS: Record<Filter, Marker[]> = {
 const FILTERS: Filter[] = ['Social Infra', 'Transport Infra'];
 
 export default function LocationScreen() {
-  const { isTablet } = useResponsive();
+  const { isTablet, isPhone } = useResponsive();
   const [activeFilter, setActiveFilter] = useState<Filter>('Social Infra');
 
   const zoom = useSharedValue(1);
@@ -79,8 +79,14 @@ export default function LocationScreen() {
         <View style={StyleSheet.absoluteFill} />
       )}
 
-      {/* Marker layer — scaled by the zoom controls. */}
-      <Animated.View style={[StyleSheet.absoluteFill, layerStyle]} pointerEvents="none">
+      {/* Marker layer — scaled by the zoom controls. On phone-landscape the layer is
+          inset into a safe band so markers clear the top filter pills, the bottom nav
+          bar / zoom controls, and the screen edges (instead of the full-bleed layout
+          that bunched and clipped them). */}
+      <Animated.View
+        style={[isPhone ? styles.markerLayerPhone : StyleSheet.absoluteFill, layerStyle]}
+        pointerEvents="none"
+      >
         {markers.map((m) => (
           <View
             key={`${activeFilter}-${m.label}`}
@@ -89,8 +95,8 @@ export default function LocationScreen() {
             {m.image ? (
               <Image source={locationLogo} style={styles.markerLogo} resizeMode="contain" />
             ) : (
-              <View style={styles.labelPill}>
-                <Text style={styles.labelText} numberOfLines={1}>
+              <View style={[styles.labelPill, isPhone && styles.labelPillPhone]}>
+                <Text style={[styles.labelText, isPhone && styles.labelTextPhone]} numberOfLines={1}>
                   {m.label}
                 </Text>
               </View>
@@ -123,8 +129,8 @@ export default function LocationScreen() {
         </View>
       </View>
 
-      {/* Zoom controls (bottom-left). */}
-      <View style={styles.zoomWrap} pointerEvents="box-none">
+      {/* Zoom controls (bottom-left) — lifted above the phone bottom nav bar. */}
+      <View style={[styles.zoomWrap, isPhone && { bottom: 92 }]} pointerEvents="box-none">
         <LinearGradient
           colors={['rgba(255,255,255,0.18)', 'rgba(255,255,255,0)']}
           style={styles.zoomGroup}
@@ -148,6 +154,7 @@ const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: '#000', overflow: 'hidden' },
 
   // Markers
+  markerLayerPhone: { position: 'absolute', top: 66, bottom: 80, left: 46, right: 46 },
   marker: { position: 'absolute', alignItems: 'center' },
   markerLogo: { width: 90, height: 56, marginBottom: 4 },
   labelPill: {
@@ -159,11 +166,13 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     marginBottom: 2,
   },
+  labelPillPhone: { paddingHorizontal: 7, paddingVertical: 3, borderRadius: 5 },
   labelText: {
     color: 'white',
     fontSize: 11,
     letterSpacing: 0.8,
   },
+  labelTextPhone: { fontSize: 9, letterSpacing: 0.3 },
   markerLine: { width: 1, height: 18, backgroundColor: 'rgba(255,255,255,0.9)' },
   markerDot: {
     width: 10,
