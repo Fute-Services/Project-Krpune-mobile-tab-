@@ -1,12 +1,15 @@
+import { useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { useVideoPlayer, VideoView } from 'expo-video';
 import BackButton from './BackButton';
-import LoopingVideo from './LoopingVideo';
 import { localVideos } from '../assets/videos';
 
 /**
- * Full-screen looping video page used by the Construction / Walkthrough /
- * Circulation Plan screens (Vimeo embeds on the web). Shows a placeholder until
- * the user drops the corresponding local .mp4 in src/assets/videos/.
+ * Full-screen video page used by the Construction / Walkthrough / Circulation
+ * Plan screens (Vimeo embeds on the web). Unlike the muted background loops,
+ * this plays with SOUND and shows native controls so the user can play/pause
+ * and scrub forward/back. Shows a placeholder until the corresponding local
+ * .mp4 is dropped in src/assets/videos/.
  */
 export default function FullScreenVideo({
   videoKey,
@@ -17,10 +20,27 @@ export default function FullScreenVideo({
 }) {
   const source = localVideos[videoKey];
 
+  const player = useVideoPlayer(source ?? null, (p) => {
+    p.muted = false;
+    p.loop = false;
+    if (source != null) p.play();
+  });
+
+  // Keep playing when the screen (re)mounts.
+  useEffect(() => {
+    if (source != null) player.play();
+  }, [player, source]);
+
   return (
     <View style={styles.root}>
       {source != null ? (
-        <LoopingVideo source={source} contentFit="contain" style={styles.video} />
+        <VideoView
+          player={player}
+          style={styles.video}
+          contentFit="contain"
+          nativeControls
+          allowsFullscreen
+        />
       ) : (
         <View style={styles.placeholder}>
           <Text style={styles.title}>{title}</Text>

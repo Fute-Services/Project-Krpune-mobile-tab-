@@ -101,9 +101,11 @@ const styles = StyleSheet.create({
     position: 'absolute',
     borderRadius: 16,
     overflow: 'hidden',
-    backgroundColor: 'rgba(37,99,235,0.10)',
+    // Solid-ish dark glass so the copy stays readable over the bright building
+    // render behind it (the old 10%-opacity fill let the text bleed into the image).
+    backgroundColor: 'rgba(8,22,48,0.72)',
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.2)',
+    borderColor: 'rgba(255,255,255,0.25)',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 12 },
     shadowOpacity: 0.35,
