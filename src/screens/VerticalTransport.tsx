@@ -71,24 +71,23 @@ export default function VerticalTransportScreen() {
           </View>
         </View>
       ) : (
-        /* Phone: video on top, 2-col button grid below */
-        <View style={styles.phoneCol}>
-          <View style={styles.phoneVideoWrap}>
+        /* Phone: buttons stacked on the left, image/video on the right (fills the
+           wasted side space and shifts the diagram rightward). */
+        <View style={styles.phoneRow}>
+          <View style={styles.phoneSideButtons}>
+            {sections.map((s) => (
+              <SectionButton
+                key={s._id}
+                label={s.label}
+                active={s._id === active._id}
+                onPress={() => setActive(s)}
+                variant="stack"
+              />
+            ))}
+          </View>
+          <View style={styles.phoneVideoArea}>
             <View style={styles.videoCardPhone}>
               {videoSrc && <LoopingVideo source={videoSrc} contentFit="contain" />}
-            </View>
-          </View>
-          <View style={styles.bottomStrip}>
-            <View style={styles.grid}>
-              {sections.map((s) => (
-                <SectionButton
-                  key={s._id}
-                  label={s.label}
-                  active={s._id === active._id}
-                  onPress={() => setActive(s)}
-                  variant="grid"
-                />
-              ))}
             </View>
           </View>
         </View>
@@ -108,17 +107,16 @@ function SectionButton({
   label: string;
   active: boolean;
   onPress: () => void;
-  variant: 'pill' | 'grid';
+  variant: 'pill' | 'stack';
 }) {
+  const btnStyle = variant === 'pill' ? styles.pill : styles.stackBtn;
+  const textStyle = variant === 'pill' ? styles.pillText : styles.stackText;
   return (
     <Pressable
       onPress={onPress}
-      style={[
-        variant === 'pill' ? styles.pill : styles.gridBtn,
-        { backgroundColor: active ? '#5ebfe9c0' : '#82cbece0' },
-      ]}
+      style={[btnStyle, { backgroundColor: active ? '#5ebfe9c0' : '#82cbece0' }]}
     >
-      <Text style={variant === 'pill' ? styles.pillText : styles.gridText}>{label}</Text>
+      <Text style={textStyle}>{label}</Text>
     </Pressable>
   );
 }
@@ -169,37 +167,37 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255,255,255,0.3)',
   },
   pillText: { color: 'white', letterSpacing: 1, fontSize: 14 },
-  phoneCol: { flex: 1, paddingBottom: 16 },
-  phoneVideoWrap: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 12 },
+
+  // Phone: left button column + right video area.
+  phoneRow: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    paddingHorizontal: 12,
+    paddingBottom: 14,
+  },
+  phoneSideButtons: { width: 208, gap: 10, justifyContent: 'center' },
+  phoneVideoArea: { flex: 1, alignItems: 'center', justifyContent: 'center' },
   videoCardPhone: {
     width: '100%',
-    height: '92%',
+    height: '94%',
     borderRadius: 16,
     overflow: 'hidden',
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.2)',
     backgroundColor: '#000',
   },
-  bottomStrip: { paddingHorizontal: 12 },
-  grid: {
-    backgroundColor: 'rgba(255,255,255,0.1)',
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.2)',
-    borderRadius: 16,
-    padding: 10,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-  },
-  gridBtn: {
-    width: '48%',
+  stackBtn: {
     paddingVertical: 12,
+    paddingHorizontal: 12,
     borderRadius: 12,
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.3)',
     alignItems: 'center',
+    justifyContent: 'center',
   },
-  gridText: {
+  stackText: {
     color: 'white',
     fontSize: 11,
     fontWeight: '700',
