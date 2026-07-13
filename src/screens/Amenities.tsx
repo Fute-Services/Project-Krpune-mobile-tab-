@@ -11,13 +11,16 @@ export default function AmenitiesScreen() {
   const bg = resolveAsset(BG) as AssetSource;
   return (
     <ImageBackground source={bg} style={styles.root} resizeMode="cover">
-      {/* Clear the left rail (left:40 + width:80 ≈ 120) on tablet; phone uses a
-          bottom bar so the left edge is free. Vertically centred like the rail —
-          nudged up on phone so the last button clears the bottom nav bar. */}
+      {/* Tablet: dock the level buttons on the RIGHT so they clear the left nav
+          rail and sit cleanly against the edge. Phone keeps them on the left
+          (bottom bar frees the left edge), nudged up so the last button clears
+          the bottom nav bar. Vertically centred either way. */}
       <View
         style={[
           styles.buttons,
-          { left: isTablet ? 150 : 24, transform: [{ translateY: isTablet ? -140 : -104 }] },
+          isTablet
+            ? { right: 48, transform: [{ translateY: -140 }] }
+            : { left: 24, transform: [{ translateY: -104 }] },
         ]}
       >
         <AmenitiesButtons />
