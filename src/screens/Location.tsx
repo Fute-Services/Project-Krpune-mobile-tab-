@@ -72,43 +72,46 @@ export default function LocationScreen() {
 
   return (
     <View style={styles.root}>
-      {/* Background video (offline). */}
-      {videoSrc ? (
-        <LoopingVideo source={videoSrc as AssetSource} contentFit="cover" />
-      ) : (
-        <View style={StyleSheet.absoluteFill} />
-      )}
+      {/* Scene layer — the video AND the markers scale together as one unit so the
+          navpoints stay pinned to the same spot on the video as you zoom. (Previously
+          only the markers scaled while the video stayed put, so zooming pushed the
+          navpoints away from the building they point at.) The filter pills and zoom
+          controls live OUTSIDE this layer, so the UI itself never zooms. */}
+      <Animated.View style={[StyleSheet.absoluteFill, layerStyle]} pointerEvents="none">
+        {/* Background video (offline). */}
+        {videoSrc ? (
+          <LoopingVideo source={videoSrc as AssetSource} contentFit="cover" />
+        ) : (
+          <View style={StyleSheet.absoluteFill} />
+        )}
 
-      {/* Marker layer — scaled by the zoom controls. On phone-landscape the layer is
-          inset into a safe band so markers clear the top filter pills, the bottom nav
-          bar / zoom controls, and the screen edges (instead of the full-bleed layout
-          that bunched and clipped them). */}
-      <Animated.View
-        style={[isPhone ? styles.markerLayerPhone : StyleSheet.absoluteFill, layerStyle]}
-        pointerEvents="none"
-      >
-        {markers.map((m) => (
-          <View
-            key={`${activeFilter}-${m.label}`}
-            style={[styles.marker, { top: `${m.top}%`, left: `${m.left}%` }]}
-          >
-            {m.image ? (
-              <Image
-                source={locationLogo}
-                style={[styles.markerLogo, isPhone && styles.markerLogoPhone]}
-                resizeMode="contain"
-              />
-            ) : (
-              <View style={[styles.labelPill, isPhone && styles.labelPillPhone]}>
-                <Text style={[styles.labelText, isPhone && styles.labelTextPhone]} numberOfLines={1}>
-                  {m.label}
-                </Text>
-              </View>
-            )}
-            <View style={styles.markerLine} />
-            <View style={styles.markerDot} />
-          </View>
-        ))}
+        {/* Marker layer. On phone-landscape the markers are inset into a safe band so
+            that at rest they clear the top filter pills, the bottom nav bar / zoom
+            controls, and the screen edges. */}
+        <View style={isPhone ? styles.markerLayerPhone : StyleSheet.absoluteFill}>
+          {markers.map((m) => (
+            <View
+              key={`${activeFilter}-${m.label}`}
+              style={[styles.marker, { top: `${m.top}%`, left: `${m.left}%` }]}
+            >
+              {m.image ? (
+                <Image
+                  source={locationLogo}
+                  style={[styles.markerLogo, isPhone && styles.markerLogoPhone]}
+                  resizeMode="contain"
+                />
+              ) : (
+                <View style={[styles.labelPill, isPhone && styles.labelPillPhone]}>
+                  <Text style={[styles.labelText, isPhone && styles.labelTextPhone]} numberOfLines={1}>
+                    {m.label}
+                  </Text>
+                </View>
+              )}
+              <View style={styles.markerLine} />
+              <View style={styles.markerDot} />
+            </View>
+          ))}
+        </View>
       </Animated.View>
 
       {/* Filter pills (top). */}
