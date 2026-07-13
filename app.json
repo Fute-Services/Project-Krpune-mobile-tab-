@@ -26,6 +26,13 @@
     "plugins": [
       "expo-video",
       "expo-asset"
-    ]
+    ],
+    "extra": {
+      "appVariant": "tablet",
+      "eas": {
+        "projectId": "b88c4542-8fe5-40a1-80d2-60bad80f03ae"
+      }
+    },
+    "owner": "yogesh_12"
   }
 }
