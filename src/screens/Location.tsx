@@ -85,10 +85,11 @@ export default function LocationScreen() {
           <View style={StyleSheet.absoluteFill} />
         )}
 
-        {/* Marker layer. On phone-landscape the markers are inset into a safe band so
-            that at rest they clear the top filter pills, the bottom nav bar / zoom
-            controls, and the screen edges. */}
-        <View style={isPhone ? styles.markerLayerPhone : StyleSheet.absoluteFill}>
+        {/* Marker layer — full-bleed on every device so each navpoint's top/left %
+            lands on the same real-world spot in the video as the web map (previously
+            phone insetted the markers into a band, which compressed them toward the
+            centre and pushed them off the map features they point at). */}
+        <View style={StyleSheet.absoluteFill}>
           {markers.map((m) => (
             <View
               key={`${activeFilter}-${m.label}`}
@@ -162,7 +163,6 @@ const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: '#000', overflow: 'hidden' },
 
   // Markers
-  markerLayerPhone: { position: 'absolute', top: 98, bottom: 80, left: 46, right: 46 },
   marker: { position: 'absolute', alignItems: 'center' },
   markerLogo: { width: 90, height: 56, marginBottom: 4 },
   markerLogoPhone: { width: 60, height: 38, marginBottom: 2 },
