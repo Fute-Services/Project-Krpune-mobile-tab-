@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, Text, Image, StyleSheet, ImageBackground, Modal, Pressable } from 'react-native';
+import { View, Text, Image, StyleSheet, ImageBackground } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -8,6 +8,7 @@ import { resolveAsset } from '../offline/resolveAsset';
 import { useResponsive } from '../theme/responsive';
 import DayNightToggle, { FloatingButton } from '../components/DayNightToggle';
 import RightButton from '../components/Overview/RightButton';
+import BrochureModal from '../components/BrochureModal';
 
 import logo from '../assets/logo.png';
 import metricsIcon from '../assets/blueprint.png';
@@ -135,24 +136,8 @@ export default function HomeScreen() {
         <RightButton />
       </View>
 
-      {/* Corporate Profile (brochure) modal — offline PDF viewer is a follow-up */}
-      <Modal visible={showPdf} transparent animationType="fade" onRequestClose={() => setShowPdf(false)}>
-        <Pressable style={styles.modalOverlay} onPress={() => setShowPdf(false)}>
-          <Pressable style={styles.modalCard} onPress={(e) => e.stopPropagation?.()}>
-            <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Corporate Profile</Text>
-              <Pressable onPress={() => setShowPdf(false)} hitSlop={10}>
-                <Text style={styles.modalClose}>×</Text>
-              </Pressable>
-            </View>
-            <View style={styles.modalBody}>
-              <Text style={styles.modalNote}>
-                Brochure (KRC.pdf) is bundled offline. An in-app PDF viewer will be wired up next.
-              </Text>
-            </View>
-          </Pressable>
-        </Pressable>
-      </Modal>
+      {/* Corporate Profile brochure — native offline PDF viewer. */}
+      <BrochureModal visible={showPdf} onClose={() => setShowPdf(false)} />
     </ImageBackground>
   );
 }
@@ -227,33 +212,4 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   bottomLeft: { position: 'absolute', zIndex: 10 },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.6)',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 24,
-  },
-  modalCard: {
-    width: '100%',
-    maxWidth: 520,
-    backgroundColor: '#0e1730',
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.15)',
-    overflow: 'hidden',
-  },
-  modalHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 18,
-    paddingVertical: 14,
-    borderBottomWidth: 1,
-    borderBottomColor: 'rgba(255,255,255,0.12)',
-  },
-  modalTitle: { color: 'white', fontSize: 18, fontWeight: '700' },
-  modalClose: { color: 'white', fontSize: 26, lineHeight: 26 },
-  modalBody: { padding: 22 },
-  modalNote: { color: '#9aa4bf', fontSize: 14, lineHeight: 20 },
 });

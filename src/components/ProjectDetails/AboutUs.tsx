@@ -11,8 +11,7 @@ import { navigate } from '../../navigation/navigationRef';
 import { useResponsive } from '../../theme/responsive';
 import GradientButton from '../GradientButton';
 import backImg from '../../assets/back.png';
-// Local brochure PDF — bundled but not yet wired to a viewer.
-import brochurePdf from '../../assets/broucher/KRC.pdf';
+import BrochureModal from '../BrochureModal';
 
 interface AboutUsProps {
   handleClose?: () => void;
@@ -27,12 +26,10 @@ interface AboutUsProps {
 export default function AboutUs({ handleClose }: AboutUsProps) {
   const { isTablet } = useResponsive();
   const [isExpanded, setIsExpanded] = useState(false);
+  const [showPdf, setShowPdf] = useState(false);
   const toggleExpanded = () => setIsExpanded(!isExpanded);
 
-  const openBrochure = () => {
-    // PDF viewer not wired yet — keep a reference, no-op for now.
-    console.log('Open brochure (no viewer yet):', brochurePdf);
-  };
+  const openBrochure = () => setShowPdf(true);
 
   return (
     <View style={styles.root}>
@@ -90,6 +87,8 @@ export default function AboutUs({ handleClose }: AboutUsProps) {
         </GradientButton>
         <GradientButton onPress={() => navigate('Gallery')}>Gallery</GradientButton>
       </View>
+
+      <BrochureModal visible={showPdf} onClose={() => setShowPdf(false)} />
     </View>
   );
 }
