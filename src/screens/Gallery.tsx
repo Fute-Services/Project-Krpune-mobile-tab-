@@ -22,7 +22,7 @@ function srcOf(item: GalleryImage) {
 
 export default function GalleryScreen() {
   const { isTablet } = useResponsive();
-  const { width } = useWindowDimensions();
+  const { width, height } = useWindowDimensions();
 
   const [categories, setCategories] = useState<GalleryCategory[]>([]);
   const [viewMode, setViewMode] = useState('exterior');
@@ -56,8 +56,10 @@ export default function GalleryScreen() {
 
   const hasCategory = (c: string) => categories.some((cat) => cat.category === c);
 
-  // Item sizing: bigger on tablet. Coverflow-like parallax neighbours peek in.
-  const itemHeight = isTablet ? 460 : 320;
+  // Item sizing: fill most of the screen height so the image is showcased big
+  // (leaving room for the title on top + the Interior/Exterior toggle at the
+  // bottom). Coverflow-like parallax neighbours peek in from the sides.
+  const itemHeight = Math.round(height * (isTablet ? 0.78 : 0.7));
 
   if (loading) {
     return (
@@ -88,8 +90,8 @@ export default function GalleryScreen() {
             loop={filteredImages.length > 2}
             mode="parallax"
             modeConfig={{
-              parallaxScrollingScale: 0.86,
-              parallaxScrollingOffset: isTablet ? 140 : 90,
+              parallaxScrollingScale: 0.92,
+              parallaxScrollingOffset: isTablet ? 150 : 96,
             }}
             onSnapToItem={setActiveIndex}
             renderItem={({ item }) => {
@@ -155,7 +157,7 @@ const styles = StyleSheet.create({
   loadingText: { color: 'white', fontSize: 16 },
   titleWrap: {
     position: 'absolute',
-    top: '12%',
+    top: '5%',
     left: 0,
     right: 0,
     alignItems: 'center',
