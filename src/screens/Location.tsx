@@ -28,7 +28,7 @@ type Marker = {
 // Off-screen web values (left > 100%) are clamped into view for the native map.
 const MARKERS: Record<Filter, Marker[]> = {
   'Social Infra': [
-    { label: 'Raheja IT Park', top: 50, left: 53, image: true },
+    { label: 'Raheja IT Park', top: 41, left: 51, image: true },
     { label: 'Manipal Hospital - 06 Mins', top: 17, left: 55 },
     { label: 'Westend Mall - 17 Mins', top: 30, left: 82 },
     { label: 'Radisson Blu - 18 Mins', top: 10, left: 6 },
@@ -38,7 +38,7 @@ const MARKERS: Record<Filter, Marker[]> = {
     { label: 'Puraniks Aldea Espanola - 05 Mins', top: 22, left: 30 },
   ],
   'Transport Infra': [
-    { label: 'Raheja IT Park', top: 50, left: 53, image: true },
+    { label: 'Raheja IT Park', top: 41, left: 51, image: true },
     { label: 'Mumbai - Bangalore Highway - 02 Mins', top: 78, left: 60 },
     { label: 'Dapodi Metro Station - 18 Mins', top: 20, left: 80 },
     { label: 'Pune International Airport - 40 Mins', top: 45, left: 80 },
