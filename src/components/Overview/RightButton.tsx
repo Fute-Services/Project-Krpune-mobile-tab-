@@ -9,7 +9,7 @@ import { useResponsive } from '../../theme/responsive';
  * Web spec: px-5 md:px-8 py-2 md:py-3 text-[11px] md:text-sm, gap-3, rounded-3xl.
  */
 export default function RightButton() {
-  const { select } = useResponsive();
+  const { select, isPhone } = useResponsive();
 
   // Web breakpoints: phone (<md), tablet/desktop (>=md).
   const padX = select({ phone: 20, tablet: 30, large: 34 });
@@ -18,12 +18,23 @@ export default function RightButton() {
   const fontSize = select({ phone: 11, tablet: 13, large: 14 });
   const gap = select({ phone: 10, tablet: 12, large: 12 });
 
+  // On phone-landscape the two pills stack vertically (Gallery directly under
+  // Walkthrough) and stretch to a shared width so they line up neatly; tablet
+  // keeps the original side-by-side row.
+  const pressableStyle = ({ pressed }: { pressed: boolean }) => [
+    isPhone && styles.pressablePhone,
+    pressed && { transform: [{ scale: 0.96 }] },
+  ];
+
   return (
-    <View style={[styles.container, { gap }]}>
-      <Pressable
-        onPress={() => navigate('Walkthrough')}
-        style={({ pressed }) => [pressed && { transform: [{ scale: 0.96 }] }]}
-      >
+    <View
+      style={[
+        styles.container,
+        { gap },
+        isPhone && styles.containerPhone,
+      ]}
+    >
+      <Pressable onPress={() => navigate('Walkthrough')} style={pressableStyle}>
         <LinearGradient
           colors={['#407BB6', '#76ACE2'] as const}
           start={{ x: 0, y: 0 }}
@@ -34,15 +45,15 @@ export default function RightButton() {
         </LinearGradient>
       </Pressable>
 
-      <Pressable
-        onPress={() => navigate('Gallery')}
-        style={({ pressed }) => [pressed && { transform: [{ scale: 0.96 }] }]}
-      >
+      <Pressable onPress={() => navigate('Gallery')} style={pressableStyle}>
         <LinearGradient
           colors={['#407BB6', '#76ACE2'] as const}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
-          style={[styles.btn, { paddingHorizontal: padXWide, paddingVertical: padY }]}
+          style={[
+            styles.btn,
+            { paddingHorizontal: isPhone ? padX : padXWide, paddingVertical: padY },
+          ]}
         >
           <Text style={[styles.btnText, { fontSize }]}>Gallery</Text>
         </LinearGradient>
@@ -55,6 +66,14 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  // Phone: stack the pills in a column, stretched to equal width.
+  containerPhone: {
+    flexDirection: 'column',
+    alignItems: 'stretch',
+  },
+  pressablePhone: {
+    alignSelf: 'stretch',
   },
   btn: {
     borderRadius: 24,
