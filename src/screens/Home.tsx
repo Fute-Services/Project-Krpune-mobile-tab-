@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, Image, StyleSheet, ImageBackground } from 'react-native';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -57,12 +57,16 @@ export default function HomeScreen() {
   const labelSize = select({ phone: 9, tablet: 10, large: 11 });
 
   return (
-    <View style={styles.root}>
-      {/* Crossfading day/night backgrounds */}
-      {nightBg && <Image source={nightBg} style={StyleSheet.absoluteFill} resizeMode="cover" />}
-      {dayBg && (
-        <Animated.Image source={dayBg} style={[StyleSheet.absoluteFill, dayStyle]} resizeMode="cover" />
-      )}
+    // Night is the base layer (identical to the original ImageBackground so the
+    // framing/zoom is unchanged); the day image crossfades in on top of it. Using
+    // ImageBackground for BOTH keeps the cover-sizing correct — a plain <Image>
+    // with absoluteFill mis-scaled ("zoomed") the render on Android.
+    <ImageBackground source={nightBg} style={styles.root} resizeMode="cover">
+      <Animated.View style={[StyleSheet.absoluteFill, dayStyle]} pointerEvents="none">
+        {dayBg && (
+          <ImageBackground source={dayBg} style={StyleSheet.absoluteFill} resizeMode="cover" />
+        )}
+      </Animated.View>
 
       {/* Top-left wordmark logo (.header-content > .header-logo1) */}
       <View style={[styles.headerLeft, { top: insets.top + 10 }]} pointerEvents="none">
@@ -154,7 +158,7 @@ export default function HomeScreen() {
 
       {/* Corporate Profile brochure — native offline PDF viewer. */}
       <BrochureModal visible={showPdf} onClose={() => setShowPdf(false)} />
-    </View>
+    </ImageBackground>
   );
 }
 
