@@ -1,5 +1,6 @@
-import { useState } from 'react';
-import { View, Text, Image, StyleSheet, ImageBackground } from 'react-native';
+import { useEffect, useState } from 'react';
+import { View, Text, Image, StyleSheet } from 'react-native';
+import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -26,7 +27,16 @@ export default function HomeScreen() {
   const [isNight, setIsNight] = useState(true);
   const [showPdf, setShowPdf] = useState(false);
 
-  const bg = resolveAsset(isNight ? NIGHT_BG : DAY_BG);
+  // Both backgrounds are always mounted; toggling day/night crossfades the day
+  // image's opacity over the night one for a smooth transition (instead of an
+  // abrupt source swap).
+  const nightBg = resolveAsset(NIGHT_BG);
+  const dayBg = resolveAsset(DAY_BG);
+  const dayOpacity = useSharedValue(isNight ? 0 : 1);
+  useEffect(() => {
+    dayOpacity.value = withTiming(isNight ? 0 : 1, { duration: 550 });
+  }, [isNight]);
+  const dayStyle = useAnimatedStyle(() => ({ opacity: dayOpacity.value }));
 
   // Responsive sizes — mirror web breakpoints (phone <=430, tablet <=768, desktop base).
   // Phone-landscape is short, so keep the right control stack compact enough that the
@@ -47,7 +57,13 @@ export default function HomeScreen() {
   const labelSize = select({ phone: 9, tablet: 10, large: 11 });
 
   return (
-    <ImageBackground source={bg} style={styles.root} resizeMode="cover">
+    <View style={styles.root}>
+      {/* Crossfading day/night backgrounds */}
+      {nightBg && <Image source={nightBg} style={StyleSheet.absoluteFill} resizeMode="cover" />}
+      {dayBg && (
+        <Animated.Image source={dayBg} style={[StyleSheet.absoluteFill, dayStyle]} resizeMode="cover" />
+      )}
+
       {/* Top-left wordmark logo (.header-content > .header-logo1) */}
       <View style={[styles.headerLeft, { top: insets.top + 10 }]} pointerEvents="none">
         <Image
@@ -138,7 +154,7 @@ export default function HomeScreen() {
 
       {/* Corporate Profile brochure — native offline PDF viewer. */}
       <BrochureModal visible={showPdf} onClose={() => setShowPdf(false)} />
-    </ImageBackground>
+    </View>
   );
 }
 

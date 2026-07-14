@@ -124,7 +124,7 @@ export default function LocationScreen() {
       </Animated.View>
 
       {/* Filter pills (top). */}
-      <View style={styles.filtersWrap} pointerEvents="box-none">
+      <View style={[styles.filtersWrap, isTablet && styles.filtersWrapTablet]} pointerEvents="box-none">
         <View style={styles.filters}>
           {FILTERS.map((filter) => {
             const active = activeFilter === filter;
@@ -209,6 +209,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     zIndex: 30,
   },
+  // On tablet the left nav rail eats the left edge, so centring on the full width
+  // makes the pills look shifted left. Nudge them right so they sit centred in the
+  // visible area with an even margin on both sides.
+  filtersWrapTablet: { paddingLeft: 150 },
   filters: {
     flexDirection: 'row',
     alignItems: 'center',

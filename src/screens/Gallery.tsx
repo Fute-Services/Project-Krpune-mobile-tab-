@@ -99,7 +99,15 @@ export default function GalleryScreen() {
               return (
                 <View style={styles.slide}>
                   {src ? (
-                    <Image source={src} style={styles.slideImage} resizeMode="cover" />
+                    // resizeMethod="scale" makes Android scale the full-resolution
+                    // bitmap on the GPU instead of decoding a downsampled copy, so
+                    // the large showcase images stay sharp rather than looking soft.
+                    <Image
+                      source={src}
+                      style={styles.slideImage}
+                      resizeMode="cover"
+                      resizeMethod="scale"
+                    />
                   ) : (
                     <View style={[styles.slideImage, styles.slideFallback]} />
                   )}

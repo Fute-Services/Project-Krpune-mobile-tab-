@@ -68,6 +68,10 @@ const NAME_MAP: Record<string, string> = {
 export default function VRScreen() {
   const [htmlUri, setHtmlUri] = useState<string | null>(null);
   const [failed, setFailed] = useState(false);
+  // Bumped to remount the WebView if Android kills its renderer process (WebGL
+  // OOM). Without handling that, a dead renderer crashes the whole app; here we
+  // just rebuild the viewer instead.
+  const [reloadKey, setReloadKey] = useState(0);
   const buildToken = useRef(0);
 
   useEffect(() => {
@@ -230,7 +234,7 @@ html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:#
 
   try {
     viewer = pannellum.viewer('panorama', {
-      sceneFadeDuration: 1000,
+      sceneFadeDuration: 500,
       default: {
         firstScene: FIRST,
         autoLoad: true,
@@ -282,6 +286,7 @@ html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:#
     <View style={styles.root}>
       {htmlUri ? (
         <WebView
+          key={reloadKey}
           originWhitelist={['*']}
           source={{ uri: htmlUri }}
           style={styles.web}
@@ -293,6 +298,11 @@ html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:#
           mixedContentMode="always"
           scrollEnabled={false}
           setBuiltInZoomControls={false}
+          cacheEnabled
+          androidLayerType="hardware"
+          // If Android reclaims the WebView renderer (WebGL OOM), rebuild the
+          // viewer instead of letting the whole app crash.
+          onRenderProcessGone={() => setReloadKey((k) => k + 1)}
         />
       ) : (
         <View style={styles.center}>
