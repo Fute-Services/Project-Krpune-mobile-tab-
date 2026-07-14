@@ -140,7 +140,18 @@ export default function UnitPlanScreen({ route }: any) {
       <GestureDetector gesture={composed}>
         <Animated.View style={styles.stage}>
           <Animated.View style={[styles.planWrap, imgStyle]}>
-            {planSrc && <Image source={planSrc} style={styles.plan} resizeMode="contain" />}
+            {/* Base plan (3D floor plate / 2D plan). While the sinking overlay
+                (the building render, which has a transparent background) is on
+                top, hide the base so the two don't show through each other and
+                look like two overlapping images — matches the web (base opacity
+                0 while the overlay is up). It reveals when the overlay is tapped. */}
+            {planSrc && (
+              <Image
+                source={planSrc}
+                style={[styles.plan, isTablet && showOverlay && overlaySrc ? styles.hidden : null]}
+                resizeMode="contain"
+              />
+            )}
             {/* Sinking overlay image — tap to dive in */}
             {showOverlay && overlaySrc && (
               <Pressable
@@ -267,6 +278,7 @@ const styles = StyleSheet.create({
   stage: { flex: 1, alignItems: 'center', justifyContent: 'center' },
   planWrap: { width: '100%', height: '100%' },
   plan: { width: '100%', height: '100%' },
+  hidden: { opacity: 0 },
   unitLogo: { position: 'absolute', right: 20, width: 80, height: 80, zIndex: 50 },
   unitLogoPhone: { width: 52, height: 52, right: 12 },
   iconBtn: {
