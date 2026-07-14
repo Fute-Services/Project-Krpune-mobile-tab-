@@ -129,6 +129,14 @@ export default function UnitPlanScreen({ route }: any) {
     resetView();
   };
 
+  // The sinking building overlay belongs to the 3D view only. On tablet we show
+  // it just in 3D (imageIndex 0) and hide the base plate underneath it so the two
+  // don't overlap; the 2D view then shows its own plan directly (no overlay, no
+  // overlap). Phone keeps the original behaviour.
+  const is3D = imageIndex === 0;
+  const overlayVisible = !!overlaySrc && showOverlay && (!isTablet || is3D);
+  const hideBase = isTablet && is3D && showOverlay && !!overlaySrc;
+
   return (
     <ImageBackground source={bgUnit} style={styles.root} resizeMode="cover">
       {/* Floor name watermark */}
@@ -148,12 +156,12 @@ export default function UnitPlanScreen({ route }: any) {
             {planSrc && (
               <Image
                 source={planSrc}
-                style={[styles.plan, isTablet && showOverlay && overlaySrc ? styles.hidden : null]}
+                style={[styles.plan, hideBase ? styles.hidden : null]}
                 resizeMode="contain"
               />
             )}
-            {/* Sinking overlay image — tap to dive in */}
-            {showOverlay && overlaySrc && (
+            {/* Sinking overlay image — tap to dive in (3D view only on tablet) */}
+            {overlayVisible && (
               <Pressable
                 style={StyleSheet.absoluteFill}
                 onPress={() => {
