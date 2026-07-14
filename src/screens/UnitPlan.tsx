@@ -169,8 +169,12 @@ export default function UnitPlanScreen({ route }: any) {
         <Image source={backImg} style={styles.iconImg} resizeMode="contain" />
       </Pressable>
 
-      {/* Side panel: unit info + rooms */}
-      {panelOpen && (
+      {/* Side panel: unit info + rooms.
+          In 2D view the plan image already carries its OWN baked-in legend at the
+          top-left (Services lift lobby / AHU room / …), which collided with this
+          panel. On tablet we hide the panel while the 2D plan is showing so the
+          two never overlap; it returns when you switch back to 3D. */}
+      {panelOpen && !(isTablet && imageIndex === 1) && (
         <View style={[styles.panel, { top: insets.top + 64, width: isTablet ? 260 : 190 }]}>
           {info?.title && (
             <View style={styles.infoBox}>
