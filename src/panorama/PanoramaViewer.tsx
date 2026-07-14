@@ -4,6 +4,7 @@ import { WebView } from 'react-native-webview';
 import { Asset } from 'expo-asset';
 import * as FileSystem from 'expo-file-system/legacy';
 import { resolveAsset } from '../offline/resolveAsset';
+import { useResponsive } from '../theme/responsive';
 
 import pannellumJs from '../../assets/pano/pannellum.js.txt';
 import pannellumCss from '../../assets/pano/pannellum.css.txt';
@@ -62,6 +63,7 @@ export default function PanoramaViewer({
   autoRotate?: boolean;
 }) {
   const [htmlUri, setHtmlUri] = useState<string | null>(null);
+  const { isTablet } = useResponsive();
 
   useEffect(() => {
     let cancelled = false;
@@ -87,6 +89,9 @@ export default function PanoramaViewer({
 <style>${css}
 html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:#000;}
 #panorama{width:100vw;height:100vh;}
+/* On tablet, move Pannellum's +/- zoom control to the top-right so it no longer
+   collides with (and hides) the app's back button in the top-left corner. */
+${isTablet ? '.pnlm-controls-container{top:64px !important;left:auto !important;right:12px !important;}' : ''}
 </style>
 </head>
 <body>
@@ -120,7 +125,7 @@ html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:#
     return () => {
       cancelled = true;
     };
-  }, [imageUrl, autoRotate]);
+  }, [imageUrl, autoRotate, isTablet]);
 
   if (!htmlUri) {
     return (

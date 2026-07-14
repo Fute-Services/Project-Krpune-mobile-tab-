@@ -99,7 +99,7 @@ export default function LocationScreen() {
                 // height) so the logo always floats ABOVE the point it pins — the
                 // building — on every device, regardless of the video's cover-crop.
                 // Text markers stay top-anchored (label above, dot below).
-                m.image && { transform: [{ translateY: isPhone ? -68 : -88 }] },
+                m.image && { transform: [{ translateY: isPhone ? -68 : -112 }] },
                 { top: `${m.top}%`, left: `${m.left}%` },
               ]}
             >

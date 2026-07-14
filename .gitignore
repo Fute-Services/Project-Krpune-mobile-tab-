@@ -42,3 +42,4 @@ yarn-error.*
 
 # pre-optimization image backups (large, not needed in repo)
 scripts/.img-backup/
+.env
