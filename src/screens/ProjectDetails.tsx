@@ -40,7 +40,7 @@ export default function ProjectDetailsScreen() {
       </View>
 
       {/* Nav panel — bottom right */}
-      <View style={[styles.buttonsWrap, { bottom: insets.bottom + (isTablet ? 96 : 12) }]}>
+      <View style={[styles.buttonsWrap, { bottom: insets.bottom + (isTablet ? 44 : 12) }]}>
         <ButtonDiv active="floor" compact={!isTablet} />
       </View>
 
