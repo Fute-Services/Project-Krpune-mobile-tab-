@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { View, Text, Image, Pressable, ScrollView, StyleSheet, ActivityIndicator, ImageBackground } from 'react-native';
+import Svg, { Image as SvgImage, Polygon } from 'react-native-svg';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
   useAnimatedStyle,
@@ -124,6 +125,16 @@ export default function UnitPlanScreen({ route }: any) {
   const info = currentUnit.unitInformation;
   const rooms: any[] = currentUnit.sideContent || [];
 
+  // Room "marking": each room carries polygons digitised in the overlay
+  // (building-render) image's native pixel space. We draw them in an SVG whose
+  // viewBox equals that image's natural size, so the highlight lands exactly on
+  // the room regardless of how the image is fitted/scaled on screen.
+  const overlayMeta = overlaySrc ? Image.resolveAssetSource(overlaySrc as any) : null;
+  const vbW = overlayMeta?.width || 2000;
+  const vbH = overlayMeta?.height || 1125;
+  const activeRoomData = rooms.find((r) => r.name === activeRoom);
+  const activePolys: any[] = (activeRoomData?.polygons || []).filter((p: any) => p?.points);
+
   const toggleImage = () => {
     setImageIndex((i) => (i + 1) % 2);
     resetView();
@@ -146,7 +157,7 @@ export default function UnitPlanScreen({ route }: any) {
 
       {/* Zoomable plan */}
       <GestureDetector gesture={composed}>
-        <Animated.View style={styles.stage}>
+        <Animated.View style={[styles.stage, isTablet && styles.stageTablet]}>
           <Animated.View style={[styles.planWrap, imgStyle]}>
             {/* Base plan (3D floor plate / 2D plan). While the sinking overlay
                 (the building render, which has a transparent background) is on
@@ -160,7 +171,10 @@ export default function UnitPlanScreen({ route }: any) {
                 resizeMode="contain"
               />
             )}
-            {/* Sinking overlay image — tap to dive in (3D view only on tablet) */}
+            {/* Sinking overlay image — tap to dive in (3D view only on tablet).
+                On tablet the image is drawn inside an SVG so the selected room's
+                marking polygons can be overlaid in the image's own coordinate
+                space (perfectly aligned). Phone keeps the plain image. */}
             {overlayVisible && (
               <Pressable
                 style={StyleSheet.absoluteFill}
@@ -169,7 +183,34 @@ export default function UnitPlanScreen({ route }: any) {
                   applyScale(1.3);
                 }}
               >
-                <Image source={overlaySrc} style={styles.plan} resizeMode="contain" />
+                {isTablet ? (
+                  <Svg
+                    width="100%"
+                    height="100%"
+                    viewBox={`0 0 ${vbW} ${vbH}`}
+                    preserveAspectRatio="xMidYMid meet"
+                  >
+                    <SvgImage
+                      href={overlaySrc as any}
+                      x={0}
+                      y={0}
+                      width={vbW}
+                      height={vbH}
+                      preserveAspectRatio="xMidYMid meet"
+                    />
+                    {activePolys.map((p, i) => (
+                      <Polygon
+                        key={i}
+                        points={p.points}
+                        fill="rgba(144,199,255,0.5)"
+                        stroke="#ffffff"
+                        strokeWidth={4}
+                      />
+                    ))}
+                  </Svg>
+                ) : (
+                  <Image source={overlaySrc} style={styles.plan} resizeMode="contain" />
+                )}
               </Pressable>
             )}
           </Animated.View>
@@ -277,13 +318,17 @@ const styles = StyleSheet.create({
   watermark: {
     position: 'absolute',
     bottom: '5%',
-    left: 10,
-    color: 'rgba(255,255,255,0.35)',
-    fontSize: 64,
+    left: 16,
+    color: 'rgba(255,255,255,0.28)',
+    fontSize: 44,
     fontWeight: '400',
   },
   watermarkPhone: { fontSize: 34, bottom: '3%' },
   stage: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+  // On tablet, inset the plan so the building render sits a touch smaller and
+  // clears the left room panel and the bottom controls instead of filling edge
+  // to edge.
+  stageTablet: { paddingTop: 48, paddingBottom: 104, paddingLeft: 190, paddingRight: 84 },
   planWrap: { width: '100%', height: '100%' },
   plan: { width: '100%', height: '100%' },
   hidden: { opacity: 0 },
