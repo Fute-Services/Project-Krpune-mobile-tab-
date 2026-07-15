@@ -30,7 +30,7 @@ export default function ProjectDetailsScreen() {
         style={[
           styles.tableWrap,
           {
-            top: isTablet ? insets.top + 44 : insets.top + 12,
+            top: isTablet ? insets.top + 100 : insets.top + 12,
             width: isTablet ? 310 : 190,
             height: isTablet ? '45%' : '36%',
           },
