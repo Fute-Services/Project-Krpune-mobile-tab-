@@ -6,6 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import BuildingImage from '../components/ProjectDetails/BuildingImage';
 import ButtonDiv from '../components/ProjectDetails/ButtonDiv';
 import FloorTable from '../components/ProjectDetails/FloorTable';
+import Logo from '../components/Overview/Logo';
 import { navigate } from '../navigation/navigationRef';
 import { useResponsive } from '../theme/responsive';
 
@@ -21,16 +22,21 @@ export default function ProjectDetailsScreen() {
         <BuildingImage hoveredFloor={hoveredFloor} setHoveredFloor={setHoveredFloor} />
       </View>
 
+      {/* Brand logo — top-right (tablet only). */}
+      {isTablet && <Logo />}
+
       {/* Floor table — right panel. On phone (short landscape height) the table and
           the nav panel share the right column, so the table is kept short and the
-          panel is dropped to the bottom-right to guarantee they never overlap. */}
+          panel is dropped to the bottom-right to guarantee they never overlap.
+          On tablet the table is pushed below the logo badge so the two never
+          collide in the top-right corner. */}
       <View
         style={[
           styles.tableWrap,
           {
-            top: insets.top + 12,
+            top: isTablet ? 132 : insets.top + 12,
             width: isTablet ? 310 : 190,
-            height: isTablet ? '45%' : '36%',
+            height: isTablet ? '42%' : '36%',
           },
         ]}
       >
