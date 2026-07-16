@@ -1,0 +1,51 @@
+MOBILE APPLICATION
+VULNERABILITY ASSESSMENT AND PENETRATION TESTING (VAPT) REPORT
+Template
+
+Project / App Name: [ ]
+App Version Tested: [ ]
+Platform: [ ] (iOS / Android / Both)
+Testing Agency / Team: [ ]
+Testing Period: [ ] to [ ]
+Report Date: [ ]
+
+1. EXECUTIVE SUMMARY
+Brief overview of the testing engagement and overall risk posture.
+[ ]
+
+2. SCOPE
+- App package name / bundle ID: [ ]
+- App version(s) tested: [ ]
+- Testing environment: [ ]
+- In-scope features: [ ]
+- Out-of-scope items: [ ]
+
+3. METHODOLOGY
+Describe the testing approach used (e.g., OWASP MASVS/MASTG, black-box/grey-box/white-box).
+[ ]
+
+4. TOOLS USED
+[ ] MobSF     [ ] Burp Suite     [ ] Frida     [ ] Drozer     [ ] Other: [ ]
+
+5. FINDINGS SUMMARY
+
+| # | Vulnerability | Severity (Critical/High/Medium/Low) | CVSS Score | Status |
+|---|---------------|--------------------------------------|------------|--------|
+| 1 | [ ]           | [ ]                                    | [ ]        | [ ]    |
+| 2 | [ ]           | [ ]                                    | [ ]        | [ ]    |
+
+6. DETAILED FINDINGS
+For each finding, include:
+- Description: [ ]
+- Affected component: [ ]
+- Impact: [ ]
+- Recommendation: [ ]
+- Proof of concept (if applicable): [ ]
+
+7. RETESTING SUMMARY
+List which issues were retested and confirmed fixed.
+[ ]
+
+8. CONCLUSION
+Overall risk rating and closing remarks.
+[ ]

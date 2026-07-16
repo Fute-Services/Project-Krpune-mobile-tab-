@@ -1,0 +1,27 @@
+PROJECT MANAGER / SINGLE POINT OF CONTACT (SPOC) DETAILS
+Template
+
+Project Name: [ ]
+Date: [ ]
+
+1. PRIMARY SPOC DETAILS
+Name: [ ]
+Designation: [ ]
+Organization: [ ]
+Email: [ ]
+Phone Number: [ ]
+Role / Responsibilities on this project: [ ]
+
+2. BACKUP / ESCALATION CONTACT (if applicable)
+Name: [ ]
+Designation: [ ]
+Email: [ ]
+Phone Number: [ ]
+
+3. AVAILABILITY
+Preferred working hours / time zone: [ ]
+Best way to reach for urgent matters: [ ]
+
+4. NOTES
+Any additional context about team structure or communication preferences.
+[ ]

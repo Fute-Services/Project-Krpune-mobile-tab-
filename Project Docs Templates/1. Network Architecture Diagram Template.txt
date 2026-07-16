@@ -1,0 +1,43 @@
+NETWORK ARCHITECTURE DIAGRAM
+Template
+
+Project / Product Name: [ ]
+Prepared By: [ ]
+Date: [ ]
+Version: [ ]
+
+1. PURPOSE
+Briefly describe what this diagram covers and why it is being shared.
+[ ]
+
+2. SCOPE
+List what environment(s) this diagram represents (e.g., production, staging, dev/test).
+[ ]
+
+3. COMPONENTS TO INCLUDE
+Use this checklist while building the actual diagram (in Visio, Draw.io, Lucidchart, etc.):
+
+- [ ] End users / client devices
+- [ ] Load balancers
+- [ ] Web servers / application servers
+- [ ] Databases (primary, replica, backup)
+- [ ] Firewalls
+- [ ] DMZ (if applicable)
+- [ ] VPN / remote access points
+- [ ] Cloud services used (AWS / Azure / GCP, specify)
+- [ ] On-premise servers (if any)
+- [ ] Third-party integrations / APIs
+- [ ] Internal network segments / VLANs
+- [ ] Internet gateway / edge devices
+
+4. NETWORK ZONES
+Describe the different security zones (public, DMZ, internal, restricted) and what sits in each.
+[ ]
+
+5. DIAGRAM ATTACHMENT
+Attach the actual diagram file here (PDF, PNG, or Visio format is preferred).
+File name: [ ]
+
+6. NOTES
+Any additional context the IT team should know while reviewing this diagram.
+[ ]

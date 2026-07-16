@@ -1,0 +1,41 @@
+NDA / MSA AND KRC
+Cover Sheet
+
+Project Name: [ ]
+Vendor / Party Name: [ ]
+Date: [ ]
+
+1. PROJECT STAGE
+Please confirm which stage best describes this engagement:
+
+[ ] This is a Proof of Concept (POC) stage
+      -> Attach: Non-Disclosure Agreement (NDA)
+
+[ ] Vendor has already been onboarded
+      -> Attach: Master Service Agreement (MSA)
+
+2. KRC (KNOW YOUR CUSTOMER / REGISTRATION COMPLIANCE) CHECKLIST
+- [ ] Company registration certificate attached
+- [ ] GST / tax registration document attached
+- [ ] Authorized signatory ID proof attached
+- [ ] Any other compliance document required by IT/legal: [ ]
+
+3. SIGNEE DETAILS
+
+For NDA (if applicable):
+Signee Name: [ ]
+Designation: [ ]
+Date Signed: [ ]
+
+For MSA (if applicable):
+Signee Name: [ ]
+Designation: [ ]
+Date Signed: [ ]
+
+4. ATTACHMENTS CHECKLIST
+- [ ] NDA (signed copy)
+- [ ] MSA (signed copy)
+- [ ] KRC documents
+
+5. NOTES
+[ ]

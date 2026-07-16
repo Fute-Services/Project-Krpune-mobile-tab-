@@ -1,0 +1,53 @@
+DATA / INFORMATION FLOW DIAGRAM
+Template
+
+Project / Product Name: [ ]
+Prepared By: [ ]
+Date: [ ]
+Version: [ ]
+
+1. PURPOSE
+Explain what data flow this document maps out.
+[ ]
+
+2. DATA SOURCES
+List where data originates (user input, third-party systems, IoT devices, etc.).
+[ ]
+
+3. TYPES OF DATA HANDLED
+Mark which categories apply:
+
+- [ ] Personally Identifiable Information (PII)
+- [ ] Financial data
+- [ ] Health data
+- [ ] Authentication credentials
+- [ ] Business/operational data
+- [ ] Other: [ ]
+
+4. DATA FLOW DESCRIPTION
+Describe step by step how data moves through the system, from collection to storage to processing to output.
+Example format:
+Step 1: [Source] sends [data type] to [destination] via [protocol]
+Step 2: [ ]
+Step 3: [ ]
+
+5. STORAGE POINTS
+List where data is stored (databases, file storage, cache, third-party services) and for how long.
+[ ]
+
+6. SECURITY MEASURES
+- [ ] Encryption in transit (TLS/SSL) - specify version
+- [ ] Encryption at rest - specify method
+- [ ] Access controls in place
+- [ ] Data masking/anonymization used
+
+7. THIRD-PARTY DATA SHARING
+List any external parties data is shared with, and the purpose.
+[ ]
+
+8. DIAGRAM ATTACHMENT
+Attach the actual diagram file here.
+File name: [ ]
+
+9. NOTES
+[ ]

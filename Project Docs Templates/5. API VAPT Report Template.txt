@@ -1,0 +1,55 @@
+API
+VULNERABILITY ASSESSMENT AND PENETRATION TESTING (VAPT) REPORT
+Template
+
+Project Name: [ ]
+API(s) Tested: [ ]
+Testing Agency / Team: [ ]
+Testing Period: [ ] to [ ]
+Report Date: [ ]
+
+1. EXECUTIVE SUMMARY
+Brief overview of the engagement and overall risk posture.
+[ ]
+
+2. SCOPE
+List of API endpoints tested:
+- [ ]
+- [ ]
+- [ ]
+
+Authentication method(s) used by the API: [ ]
+Environment tested (dev/staging/production): [ ]
+
+3. METHODOLOGY
+Approach used (e.g., OWASP API Security Top 10), black-box/grey-box/white-box.
+[ ]
+
+4. TOOLS USED
+[ ] Postman     [ ] Burp Suite     [ ] OWASP ZAP     [ ] Other: [ ]
+
+5. AREAS TESTED
+- [ ] Authentication and authorization (broken object/function level authorization)
+- [ ] Input validation / injection
+- [ ] Rate limiting
+- [ ] Excessive data exposure
+- [ ] Security misconfiguration
+- [ ] Sensitive data in transit/at rest
+
+6. FINDINGS SUMMARY
+
+| # | Endpoint | Vulnerability | Severity | Status |
+|---|----------|----------------|----------|--------|
+| 1 | [ ]      | [ ]            | [ ]      | [ ]    |
+| 2 | [ ]      | [ ]            | [ ]      | [ ]    |
+
+7. DETAILED FINDINGS
+For each finding, include:
+- Description: [ ]
+- Impact: [ ]
+- Recommendation: [ ]
+- Proof of concept (if applicable): [ ]
+
+8. CONCLUSION
+Overall risk rating and closing remarks.
+[ ]

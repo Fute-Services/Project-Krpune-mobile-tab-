@@ -1,0 +1,47 @@
+MOBILE APPLICATION SOURCE CODE REVIEW REPORT
+Template
+
+Project / App Name: [ ]
+App Version Reviewed: [ ]
+Platform: [ ] (iOS / Android / Both)
+Reviewing Agency / Team: [ ]
+Review Period: [ ] to [ ]
+Report Date: [ ]
+
+1. PURPOSE AND SCOPE
+Describe what code base was reviewed and the goals of the review.
+[ ]
+
+2. STANDARDS / GUIDELINES USED
+[ ] OWASP MASVS     [ ] OWASP Top 10     [ ] CERT Secure Coding     [ ] Other: [ ]
+
+3. REVIEW METHODOLOGY
+Manual review, automated static analysis (SAST) tools used, or both.
+Tools used: [ ]
+
+4. FINDINGS SUMMARY
+
+| # | Issue | File / Location | Severity | Status |
+|---|-------|------------------|----------|--------|
+| 1 | [ ]   | [ ]              | [ ]      | [ ]    |
+| 2 | [ ]   | [ ]              | [ ]      | [ ]    |
+
+5. DETAILED FINDINGS
+For each issue, include:
+- Description: [ ]
+- Risk/impact: [ ]
+- Recommendation: [ ]
+- Code snippet (if applicable): [ ]
+
+6. SECURE CODING PRACTICES REVIEWED
+- [ ] Hardcoded secrets / API keys
+- [ ] Insecure data storage
+- [ ] Weak cryptography
+- [ ] Insecure network communication
+- [ ] Input validation
+- [ ] Authentication and session handling
+- [ ] Third-party library vulnerabilities
+
+7. CONCLUSION
+Overall assessment and closing remarks.
+[ ]
