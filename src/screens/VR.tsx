@@ -287,15 +287,14 @@ html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:#
       {htmlUri ? (
         <WebView
           key={reloadKey}
-          originWhitelist={['*']}
+          originWhitelist={['file://*']}
           source={{ uri: htmlUri }}
           style={styles.web}
           javaScriptEnabled
           domStorageEnabled
           allowFileAccess
           allowFileAccessFromFileURLs
-          allowUniversalAccessFromFileURLs
-          mixedContentMode="always"
+          mixedContentMode="never"
           scrollEnabled={false}
           setBuiltInZoomControls={false}
           cacheEnabled

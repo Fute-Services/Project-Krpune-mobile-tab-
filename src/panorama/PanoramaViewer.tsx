@@ -138,15 +138,14 @@ ${isTablet ? '.pnlm-controls-container{top:64px !important;left:auto !important;
 
   return (
     <WebView
-      originWhitelist={['*']}
+      originWhitelist={['file://*']}
       source={{ uri: htmlUri }}
       style={[styles.web, style]}
       javaScriptEnabled
       domStorageEnabled
       allowFileAccess
       allowFileAccessFromFileURLs
-      allowUniversalAccessFromFileURLs
-      mixedContentMode="always"
+      mixedContentMode="never"
       scrollEnabled={false}
       setBuiltInZoomControls={false}
     />

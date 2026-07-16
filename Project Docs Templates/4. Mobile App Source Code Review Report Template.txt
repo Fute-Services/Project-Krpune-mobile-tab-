@@ -22,7 +22,7 @@ Note: This review does NOT include dynamic testing (running the app on a device/
 
 | # | Issue | File / Location | Severity | Status |
 |---|-------|------------------|----------|--------|
-| 1 | WebView configured with originWhitelist=['*'], allowFileAccess, allowFileAccessFromFileURLs, allowUniversalAccessFromFileURLs, and mixedContentMode="always" | src/panorama/PanoramaViewer.tsx (~line 140-149), src/screens/VR.tsx (~line 288-298) | Medium | Open |
+| 1 | WebView configured with originWhitelist=['*'], allowFileAccess, allowFileAccessFromFileURLs, allowUniversalAccessFromFileURLs, and mixedContentMode="always" | src/panorama/PanoramaViewer.tsx (~line 140-149), src/screens/VR.tsx (~line 288-298) | Medium | Fixed (2026-07-16) |
 | 2 | 11 moderate-severity known vulnerabilities in transitive dependencies (postcss XSS advisory, uuid buffer bounds check), pulled in via the Expo CLI/config toolchain | package.json / node_modules (via expo, @expo/cli, @expo/config-plugins) | Medium | Open |
 | 3 | No AsyncStorage / SecureStore usage, no PII collected, no login/authentication, no network calls at all in normal use | N/A (informational, not a vulnerability) | Info | N/A |
 
@@ -33,12 +33,14 @@ Finding 1: Permissive WebView configuration
 - Risk/impact: Today the WebView only loads HTML the app itself writes into its own cache directory, and no remote or user-supplied content is loaded into it, so the practical risk in the current build is low. The risk would become serious if any future change ever lets this WebView load remote or user-influenced content, since that combination of settings would let injected JavaScript read local files.
 - Recommendation: Narrow the WebView settings to only what is actually needed. If the loaded HTML never needs to reach outside its own cache folder, allowUniversalAccessFromFileURLs and allowFileAccessFromFileURLs can likely be turned off. Keep originWhitelist restricted rather than '*'. Document why file access is needed if it must stay on, so it doesn't get carried forward blindly if remote content is ever added later.
 - Code snippet: see src/panorama/PanoramaViewer.tsx lines 140-149 and src/screens/VR.tsx lines 288-298.
+- Fix applied (2026-07-16): originWhitelist narrowed from ['*'] to ['file://*'] (the WebView source is always a file:// URI written to the app's own cache dir, so this doesn't restrict any real use). mixedContentMode changed from "always" to "never" since the app never loads HTTP content. allowUniversalAccessFromFileURLs was removed - it was not needed since the panorama library is inlined as an in-page <script> and image textures are loaded as same-directory file:// resource references (not cross-origin fetch/XHR), not something requiring universal file-URL access. allowFileAccess and allowFileAccessFromFileURLs were left enabled since the viewer HTML does need to read sibling image files from the cache directory by relative path. Not verified on-device (no emulator/device available in this session) - should be smoke-tested on both platforms before the next release to confirm panorama/VR scenes still load.
 
 Finding 2: Known vulnerabilities in dependency tree
 - Description: npm audit reports 11 moderate-severity advisories, rooted in outdated postcss (XSS via unescaped </style> in CSS stringify output) and uuid (missing buffer bounds check), both pulled in transitively through the Expo CLI/config toolchain, not runtime app code.
 - Risk/impact: These are build-tooling dependencies, not code that ships inside the compiled app, so they don't directly expose end users. They are still worth tracking since they affect the security of the build pipeline.
 - Recommendation: Run npm audit fix where possible; the full fix requires upgrading to Expo 57.0.6, which is a breaking change and should be scheduled and tested separately rather than applied ad hoc.
 - Code snippet: N/A (dependency-level, see package-lock.json).
+- Re-verified (2026-07-16): node_modules was not previously installed; installed now (788 packages) and re-ran npm audit. Count is now 12 moderate advisories (was 11), same two root causes (postcss, uuid), still both only fixable via `npm audit fix --force` -> expo@57.0.6. Confirmed `npm audit fix` (non-force) makes no changes - there is no fix available that avoids the breaking Expo upgrade. Status remains Open pending a deliberately scheduled Expo 57 upgrade and full regression test, not attempted in this session.
 
 6. SECURE CODING PRACTICES REVIEWED
 - [x] Hardcoded secrets / API keys - none found; no API keys, tokens, or credentials in source
