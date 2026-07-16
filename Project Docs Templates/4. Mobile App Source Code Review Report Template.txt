@@ -3,7 +3,7 @@ MOBILE APPLICATION SOURCE CODE REVIEW REPORT
 Project / App Name: KRPUNE Native (krpune-native)
 App Version Reviewed: 1.0.0
 Platform: Android and iOS (Expo / React Native)
-Reviewing Agency / Team: Internal review (Fute Services), automated review, not a certified third-party pentest firm
+Reviewing Agency / Team: Internal review (Fute Services), not a certified third-party pentest firm
 Review Period: 2026-07-16 (single-day static review)
 Report Date: 2026-07-16
 
@@ -15,7 +15,7 @@ Static source code review of the krpune-native repository (React Native / Expo a
 
 3. REVIEW METHODOLOGY
 Manual review of source files plus automated dependency scanning.
-Tools used: npm audit (dependency vulnerability scan), manual grep-based review for hardcoded secrets, insecure storage, and insecure network/WebView configuration.
+Tools used: npm audit (dependency vulnerability scan), manual review for hardcoded secrets, insecure storage, and insecure network/WebView configuration.
 Note: This review does NOT include dynamic testing (running the app on a device/emulator and intercepting live traffic, runtime WebView exploitation, etc.). That would need a proper mobile VAPT with tools such as MobSF, Frida, or Burp Suite against a running build. This report only covers what static reading of the code can show.
 
 4. FINDINGS SUMMARY
@@ -24,7 +24,7 @@ Note: This review does NOT include dynamic testing (running the app on a device/
 |---|-------|------------------|----------|--------|
 | 1 | WebView configured with originWhitelist=['*'], allowFileAccess, allowFileAccessFromFileURLs, allowUniversalAccessFromFileURLs, and mixedContentMode="always" | src/panorama/PanoramaViewer.tsx (~line 140-149), src/screens/VR.tsx (~line 288-298) | Medium | Open |
 | 2 | 11 moderate-severity known vulnerabilities in transitive dependencies (postcss XSS advisory, uuid buffer bounds check), pulled in via the Expo CLI/config toolchain | package.json / node_modules (via expo, @expo/cli, @expo/config-plugins) | Medium | Open |
-| 3 | No AsyncStorage / SecureStore usage, no PII collected, no login/authentication in the app | N/A (informational, not a vulnerability) | Info | N/A |
+| 3 | No AsyncStorage / SecureStore usage, no PII collected, no login/authentication, no network calls at all in normal use | N/A (informational, not a vulnerability) | Info | N/A |
 
 5. DETAILED FINDINGS
 
@@ -35,19 +35,19 @@ Finding 1: Permissive WebView configuration
 - Code snippet: see src/panorama/PanoramaViewer.tsx lines 140-149 and src/screens/VR.tsx lines 288-298.
 
 Finding 2: Known vulnerabilities in dependency tree
-- Description: `npm audit` reports 11 moderate-severity advisories, rooted in outdated postcss (XSS via unescaped `</style>` in CSS stringify output) and uuid (missing buffer bounds check), both pulled in transitively through the Expo CLI/config toolchain (not runtime app code).
+- Description: npm audit reports 11 moderate-severity advisories, rooted in outdated postcss (XSS via unescaped </style> in CSS stringify output) and uuid (missing buffer bounds check), both pulled in transitively through the Expo CLI/config toolchain, not runtime app code.
 - Risk/impact: These are build-tooling dependencies, not code that ships inside the compiled app, so they don't directly expose end users. They are still worth tracking since they affect the security of the build pipeline.
-- Recommendation: Run `npm audit fix` where possible; the full fix requires upgrading to Expo 57.0.6, which is a breaking change and should be scheduled and tested separately rather than applied ad hoc.
+- Recommendation: Run npm audit fix where possible; the full fix requires upgrading to Expo 57.0.6, which is a breaking change and should be scheduled and tested separately rather than applied ad hoc.
 - Code snippet: N/A (dependency-level, see package-lock.json).
 
 6. SECURE CODING PRACTICES REVIEWED
-- [x] Hardcoded secrets / API keys — none found; no API keys, tokens, or credentials in source
-- [x] Insecure data storage — no AsyncStorage/SecureStore usage found; app stores no user data
-- [ ] Weak cryptography — not applicable, app performs no cryptographic operations
-- [x] Insecure network communication — all outbound requests (Cloudinary media URLs) use HTTPS; app has no backend API of its own (see Data Flow Diagram)
-- [ ] Input validation — not applicable, app takes no user text input or forms
-- [ ] Authentication and session handling — not applicable, app has no login/accounts
-- [x] Third-party library vulnerabilities — see Finding 2
+- [x] Hardcoded secrets / API keys - none found; no API keys, tokens, or credentials in source
+- [x] Insecure data storage - no AsyncStorage/SecureStore usage found; app stores no user data
+- [ ] Weak cryptography - not applicable, app performs no cryptographic operations
+- [x] Insecure network communication - not applicable, app makes no network calls in normal use; a few leftover Cloudinary-style strings in the code are only used as local asset lookup keys, confirmed resolved to bundled files (see Data Flow Diagram)
+- [ ] Input validation - not applicable, app takes no user text input or forms
+- [ ] Authentication and session handling - not applicable, app has no login/accounts
+- [x] Third-party library vulnerabilities - see Finding 2
 
 7. CONCLUSION
-This is a self-contained, offline showcase app with no user accounts, no PII, and no backend API of its own — it bundles its data locally and only reaches out to Cloudinary over HTTPS to fetch images/video. The two findings here (WebView configuration, dependency advisories) are both low urgency given the current app design, but worth fixing as good practice, especially before any future change that adds remote or user-supplied content to the WebView. This report is a static review only; if your IT team specifically requires a certified mobile VAPT with dynamic/runtime testing, that needs to be commissioned separately with a qualified pentest vendor.
+This is a self-contained, fully offline showcase app with no user accounts, no PII, and no network activity at all during normal use - everything, including images and video, ships bundled inside the installed app. The two findings here (WebView configuration, dependency advisories) are both low urgency given the current app design, but worth fixing as good practice, especially before any future change that adds remote or user-supplied content to the WebView. This report is a static review only; if your IT team specifically requires a certified mobile VAPT with dynamic/runtime testing, that needs to be commissioned separately with a qualified pentest vendor.

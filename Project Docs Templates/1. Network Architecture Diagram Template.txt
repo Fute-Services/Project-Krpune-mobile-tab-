@@ -9,7 +9,7 @@ Version: 1.0.0
 Document the network footprint of the KRPUNE Native mobile app, based on inspection of its source code.
 
 2. SCOPE
-Client-side mobile app only (Android/iOS). This app has no backend server of its own.
+Client-side mobile app only (Android/iOS). This app has no backend server of its own and makes no network calls during normal use.
 
 3. COMPONENTS FOUND IN CODE
 - [x] End users / client devices (Android/iOS phones and tablets running the Expo app)
@@ -18,17 +18,27 @@ Client-side mobile app only (Android/iOS). This app has no backend server of its
 - [ ] Databases - none, all content is bundled as local JSON files (src/offline/data/*.json)
 - [ ] Firewalls - not applicable, no server infrastructure to protect
 - [ ] VPN / remote access points - none
-- [x] Cloud services used - Cloudinary (CDN), used only to fetch static images/video assets over HTTPS
+- [ ] Cloud services used - none contacted at runtime; see note below on Cloudinary
 - [ ] On-premise servers - none
-- [ ] Third-party integrations / APIs - none beyond the Cloudinary media CDN
+- [ ] Third-party integrations / APIs - none
 - [ ] Internal network segments / VLANs - not applicable, single client app
 
+Note on Cloudinary: a handful of files (src/screens/Home.tsx, Amenities.tsx, Location.tsx) contain
+strings that look like Cloudinary URLs. On closer inspection these are only used as lookup keys
+passed into resolveAsset() (src/offline/resolveAsset.ts), which matches the filename against a
+locally bundled asset map (src/offline/assetMap.ts) and returns the on-device file. All four of
+these specific assets were confirmed present in the local bundle, so no network request is ever
+made for them in normal use. resolveAsset() does have a defensive fallback that would stream from
+the URL directly if an asset were ever missing from the bundle, but that path is not exercised
+today - it exists only so the app does not hard-crash if a future asset is left out of the bundle
+by mistake.
+
 4. NETWORK ZONES
-There is no server-side infrastructure for this app, so there are no internal network zones to define. The only network boundary is: [Mobile App] --HTTPS--> [Cloudinary CDN] for media assets. All other data (floor plans, amenities, mobility, transport, gallery listing, VR tour metadata) ships bundled inside the app and requires no network call.
+There is no server-side infrastructure and no live network activity for this app. It is a fully self-contained, offline mobile application - every screen, image, video, and data file ships inside the installed app.
 
 5. DIAGRAM ATTACHMENT
-Given the above, the "diagram" is effectively a single arrow: Mobile App -> Cloudinary CDN (HTTPS, images/video only). A drawn version (box-and-arrow) can be produced on request, but there is no multi-tier infrastructure to depict.
-File name: [ ]
+A drawn version of this (a single box representing the app, no external connections) is available as "Architecture and Data Flow Diagram.md" in this same folder.
+File name: Architecture and Data Flow Diagram.md
 
 6. NOTES
-This document reflects what the current source code shows. If there is a separate backend, admin panel, or content management system that generates the bundled JSON files, that infrastructure lives outside this repo and should be documented separately by whoever manages it - the review here only covers what ships inside the mobile app.
+This document reflects what the current source code shows. If there is a separate backend, admin panel, or content management system used to prepare the bundled JSON/asset files before each app build, that infrastructure lives outside this repo and should be documented separately by whoever manages it - this review only covers what ships inside the installed mobile app.

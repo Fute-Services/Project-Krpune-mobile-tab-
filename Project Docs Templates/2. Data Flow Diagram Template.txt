@@ -10,7 +10,7 @@ Document how data moves through the KRPUNE Native mobile app, based on inspectio
 
 2. DATA SOURCES
 - Bundled JSON files shipped inside the app (src/offline/data/floors.json, amenities.json, mobility.json, transport.json, gallery.json, vr-tour.json). These are static content captured at build time, not live user or third-party input.
-- Media assets (images/video) fetched at runtime from Cloudinary CDN over HTTPS.
+- Media assets (images/video) bundled inside the app under assets/remote/ and resolved locally at runtime via src/offline/resolveAsset.ts - not fetched from the network.
 - No user-entered data anywhere in the app (no forms, no login, no text input fields found in the review).
 
 3. TYPES OF DATA HANDLED
@@ -23,27 +23,27 @@ Document how data moves through the KRPUNE Native mobile app, based on inspectio
 
 4. DATA FLOW DESCRIPTION
 Step 1: App launches and reads bundled JSON data directly from local app storage (no network call) via src/api/localClient.ts, which mimics the shape of the original web app's API responses.
-Step 2: Screens (Home, Amenities, VR, Location, etc.) request images/video by URL; the app fetches these from Cloudinary CDN over HTTPS at render time.
-Step 3: For the VR/panorama viewer, the app writes a self-generated HTML file into its own local cache directory (expo-file-system) and loads it into an in-app WebView to render the 3D/360 viewer. No data leaves the device for this step.
-Step 4: No data is ever sent from the device back to any server. This is a one-way, read-only content delivery flow (bundled/CDN content in, nothing out).
+Step 2: Screens (Home, Amenities, VR, Location, Gallery, Mobility, Unit Plan, Vertical Transport, etc.) pass each image/video reference through resolveAsset(), which matches it against a locally bundled asset map (src/offline/assetMap.ts) and loads the file straight from the installed app package - no network call.
+Step 3: For the VR/panorama viewer, the app writes a self-generated HTML file into its own local cache directory (expo-file-system) and loads it into an in-app WebView to render the 3D/360 viewer. No data leaves the device for this step either.
+Step 4: No data is ever sent from the device to any server, and no data is ever pulled from a live server during normal use. This is a fully closed, on-device content flow (everything ships in the app; nothing goes in or out over the network).
 
 5. STORAGE POINTS
-- App bundle: static JSON content (floors, amenities, mobility, transport, gallery, VR tour), shipped with the app, read-only.
-- Device cache directory (expo-file-system cacheDirectory): temporary copies of media/HTML files generated for the WebView viewer, cleared with normal app cache clearing.
+- App bundle: static JSON content and all media assets (floors, amenities, mobility, transport, gallery, VR tour), shipped with the app install package, read-only.
+- Device cache directory (expo-file-system cacheDirectory): temporary copies of self-generated HTML files for the WebView viewer, cleared with normal app cache clearing.
 - No database, no AsyncStorage/SecureStore usage found - the app does not persist any user data.
 
 6. SECURITY MEASURES
-- [x] Encryption in transit (TLS/SSL) - all Cloudinary media URLs found in code use HTTPS
+- [ ] Encryption in transit (TLS/SSL) - not applicable, no network calls are made during normal use
 - [ ] Encryption at rest - not applicable, no sensitive data is stored on the device
 - [ ] Access controls in place - not applicable, no accounts/data to control access to
 - [ ] Data masking/anonymization used - not applicable, no personal data is collected
 
 7. THIRD-PARTY DATA SHARING
-None. The only third party contacted is Cloudinary, and only to pull public media assets (images/video) for display - no data is sent to Cloudinary from the app, only requested from it.
+None. The app does not contact any external server or third party during normal use. A few image/video references in the code still carry Cloudinary-style URLs from the original web app, but these are only used as filename keys to look up the matching bundled local asset - see the note in "1. Network Architecture Diagram Template.txt" for detail. As a safety net, if a referenced asset were ever missing from the local bundle, the app would fall back to streaming it from that URL - this fallback is not used in the app as currently built.
 
 8. DIAGRAM ATTACHMENT
-Flow is linear and simple enough to describe in text (see section 4); a drawn version can be produced on request if the IT team specifically needs a visual diagram file.
-File name: [ ]
+A drawn version of this flow is available as "Architecture and Data Flow Diagram.md" in this same folder.
+File name: Architecture and Data Flow Diagram.md
 
 9. NOTES
-This document reflects what the current source code shows for the mobile app itself. If floor plans, amenities, or other bundled JSON content are generated/managed through a separate CMS or admin tool, the data flow for that system lives outside this repo and should be documented separately by whoever manages it.
+This document reflects what the current source code shows for the mobile app itself. If floor plans, amenities, or other bundled JSON/media content are generated or managed through a separate CMS or admin tool before being bundled into the app, the data flow for that system lives outside this repo and should be documented separately by whoever manages it.
