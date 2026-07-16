@@ -10,6 +10,17 @@ intercepting live traffic with tools such as MobSF, Frida, or Burp Suite), which
 carried out by a qualified pentest team, not generated from reading the code. The fields
 below still need to be filled in by whoever performs that testing.
 
+NOTE - OFFLINE APP: KRPUNE Native is a fully offline mobile app - it has no backend server or
+API, makes no network calls in normal use, collects no user data, and has no login/accounts
+(confirmed by source code review; see "1. Network Architecture Diagram" and
+"2. Data Flow Diagram"). This does NOT make this document not applicable - unlike the API VAPT
+report, which is genuinely N/A here because there is no API. A mobile VAPT still needs to cover
+device-side attack surface even for a fully offline app: the in-app WebView (see Finding 1 in
+the source code review), local file/cache storage, insecure data storage on the device,
+IPC/exported components, and binary-level hardening (obfuscation, tamper/root detection,
+debuggability). Testers should scope this engagement accordingly rather than skipping it because
+the app has no network traffic to intercept.
+
 Project / App Name: [ ]
 App Version Tested: [ ]
 Platform: [ ] (iOS / Android / Both)
