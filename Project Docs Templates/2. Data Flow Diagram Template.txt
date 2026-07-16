@@ -1,53 +1,49 @@
 DATA / INFORMATION FLOW DIAGRAM
-Template
 
-Project / Product Name: [ ]
-Prepared By: [ ]
-Date: [ ]
-Version: [ ]
+Project / Product Name: KRPUNE Native (krpune-native) - offline real estate showcase app
+Prepared By: Fute Services (derived from source code review)
+Date: 2026-07-16
+Version: 1.0.0
 
 1. PURPOSE
-Explain what data flow this document maps out.
-[ ]
+Document how data moves through the KRPUNE Native mobile app, based on inspection of its source code.
 
 2. DATA SOURCES
-List where data originates (user input, third-party systems, IoT devices, etc.).
-[ ]
+- Bundled JSON files shipped inside the app (src/offline/data/floors.json, amenities.json, mobility.json, transport.json, gallery.json, vr-tour.json). These are static content captured at build time, not live user or third-party input.
+- Media assets (images/video) fetched at runtime from Cloudinary CDN over HTTPS.
+- No user-entered data anywhere in the app (no forms, no login, no text input fields found in the review).
 
 3. TYPES OF DATA HANDLED
-Mark which categories apply:
-
-- [ ] Personally Identifiable Information (PII)
-- [ ] Financial data
-- [ ] Health data
-- [ ] Authentication credentials
-- [ ] Business/operational data
+- [ ] Personally Identifiable Information (PII) - none found; app collects nothing from users
+- [ ] Financial data - none
+- [ ] Health data - none
+- [ ] Authentication credentials - none; app has no login/accounts
+- [x] Business/operational data - project marketing content: floor plans, amenities, VR tour scenes, location/mobility info, gallery images
 - [ ] Other: [ ]
 
 4. DATA FLOW DESCRIPTION
-Describe step by step how data moves through the system, from collection to storage to processing to output.
-Example format:
-Step 1: [Source] sends [data type] to [destination] via [protocol]
-Step 2: [ ]
-Step 3: [ ]
+Step 1: App launches and reads bundled JSON data directly from local app storage (no network call) via src/api/localClient.ts, which mimics the shape of the original web app's API responses.
+Step 2: Screens (Home, Amenities, VR, Location, etc.) request images/video by URL; the app fetches these from Cloudinary CDN over HTTPS at render time.
+Step 3: For the VR/panorama viewer, the app writes a self-generated HTML file into its own local cache directory (expo-file-system) and loads it into an in-app WebView to render the 3D/360 viewer. No data leaves the device for this step.
+Step 4: No data is ever sent from the device back to any server. This is a one-way, read-only content delivery flow (bundled/CDN content in, nothing out).
 
 5. STORAGE POINTS
-List where data is stored (databases, file storage, cache, third-party services) and for how long.
-[ ]
+- App bundle: static JSON content (floors, amenities, mobility, transport, gallery, VR tour), shipped with the app, read-only.
+- Device cache directory (expo-file-system cacheDirectory): temporary copies of media/HTML files generated for the WebView viewer, cleared with normal app cache clearing.
+- No database, no AsyncStorage/SecureStore usage found - the app does not persist any user data.
 
 6. SECURITY MEASURES
-- [ ] Encryption in transit (TLS/SSL) - specify version
-- [ ] Encryption at rest - specify method
-- [ ] Access controls in place
-- [ ] Data masking/anonymization used
+- [x] Encryption in transit (TLS/SSL) - all Cloudinary media URLs found in code use HTTPS
+- [ ] Encryption at rest - not applicable, no sensitive data is stored on the device
+- [ ] Access controls in place - not applicable, no accounts/data to control access to
+- [ ] Data masking/anonymization used - not applicable, no personal data is collected
 
 7. THIRD-PARTY DATA SHARING
-List any external parties data is shared with, and the purpose.
-[ ]
+None. The only third party contacted is Cloudinary, and only to pull public media assets (images/video) for display - no data is sent to Cloudinary from the app, only requested from it.
 
 8. DIAGRAM ATTACHMENT
-Attach the actual diagram file here.
+Flow is linear and simple enough to describe in text (see section 4); a drawn version can be produced on request if the IT team specifically needs a visual diagram file.
 File name: [ ]
 
 9. NOTES
-[ ]
+This document reflects what the current source code shows for the mobile app itself. If floor plans, amenities, or other bundled JSON content are generated/managed through a separate CMS or admin tool, the data flow for that system lives outside this repo and should be documented separately by whoever manages it.

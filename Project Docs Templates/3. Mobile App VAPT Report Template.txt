@@ -2,6 +2,14 @@ MOBILE APPLICATION
 VULNERABILITY ASSESSMENT AND PENETRATION TESTING (VAPT) REPORT
 Template
 
+NOTE (2026-07-16): A static source code review of this app has already been completed - see
+"4. Mobile App Source Code Review Report", which flagged a WebView configuration issue and
+some dependency advisories. That review is NOT a substitute for this document. A real VAPT
+needs dynamic/runtime testing (running the compiled app on a device or emulator and
+intercepting live traffic with tools such as MobSF, Frida, or Burp Suite), which has to be
+carried out by a qualified pentest team, not generated from reading the code. The fields
+below still need to be filled in by whoever performs that testing.
+
 Project / App Name: [ ]
 App Version Tested: [ ]
 Platform: [ ] (iOS / Android / Both)

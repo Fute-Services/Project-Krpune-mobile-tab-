@@ -1,43 +1,34 @@
 NETWORK ARCHITECTURE DIAGRAM
-Template
 
-Project / Product Name: [ ]
-Prepared By: [ ]
-Date: [ ]
-Version: [ ]
+Project / Product Name: KRPUNE Native (krpune-native) - offline real estate showcase app
+Prepared By: Fute Services (derived from source code review)
+Date: 2026-07-16
+Version: 1.0.0
 
 1. PURPOSE
-Briefly describe what this diagram covers and why it is being shared.
-[ ]
+Document the network footprint of the KRPUNE Native mobile app, based on inspection of its source code.
 
 2. SCOPE
-List what environment(s) this diagram represents (e.g., production, staging, dev/test).
-[ ]
+Client-side mobile app only (Android/iOS). This app has no backend server of its own.
 
-3. COMPONENTS TO INCLUDE
-Use this checklist while building the actual diagram (in Visio, Draw.io, Lucidchart, etc.):
-
-- [ ] End users / client devices
-- [ ] Load balancers
-- [ ] Web servers / application servers
-- [ ] Databases (primary, replica, backup)
-- [ ] Firewalls
-- [ ] DMZ (if applicable)
-- [ ] VPN / remote access points
-- [ ] Cloud services used (AWS / Azure / GCP, specify)
-- [ ] On-premise servers (if any)
-- [ ] Third-party integrations / APIs
-- [ ] Internal network segments / VLANs
-- [ ] Internet gateway / edge devices
+3. COMPONENTS FOUND IN CODE
+- [x] End users / client devices (Android/iOS phones and tablets running the Expo app)
+- [ ] Load balancers - none, no backend
+- [ ] Web servers / application servers - none, app is fully offline/bundled
+- [ ] Databases - none, all content is bundled as local JSON files (src/offline/data/*.json)
+- [ ] Firewalls - not applicable, no server infrastructure to protect
+- [ ] VPN / remote access points - none
+- [x] Cloud services used - Cloudinary (CDN), used only to fetch static images/video assets over HTTPS
+- [ ] On-premise servers - none
+- [ ] Third-party integrations / APIs - none beyond the Cloudinary media CDN
+- [ ] Internal network segments / VLANs - not applicable, single client app
 
 4. NETWORK ZONES
-Describe the different security zones (public, DMZ, internal, restricted) and what sits in each.
-[ ]
+There is no server-side infrastructure for this app, so there are no internal network zones to define. The only network boundary is: [Mobile App] --HTTPS--> [Cloudinary CDN] for media assets. All other data (floor plans, amenities, mobility, transport, gallery listing, VR tour metadata) ships bundled inside the app and requires no network call.
 
 5. DIAGRAM ATTACHMENT
-Attach the actual diagram file here (PDF, PNG, or Visio format is preferred).
+Given the above, the "diagram" is effectively a single arrow: Mobile App -> Cloudinary CDN (HTTPS, images/video only). A drawn version (box-and-arrow) can be produced on request, but there is no multi-tier infrastructure to depict.
 File name: [ ]
 
 6. NOTES
-Any additional context the IT team should know while reviewing this diagram.
-[ ]
+This document reflects what the current source code shows. If there is a separate backend, admin panel, or content management system that generates the bundled JSON files, that infrastructure lives outside this repo and should be documented separately by whoever manages it - the review here only covers what ships inside the mobile app.

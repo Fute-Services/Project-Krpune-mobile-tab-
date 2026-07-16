@@ -1,55 +1,13 @@
 API
 VULNERABILITY ASSESSMENT AND PENETRATION TESTING (VAPT) REPORT
-Template
 
-Project Name: [ ]
-API(s) Tested: [ ]
-Testing Agency / Team: [ ]
-Testing Period: [ ] to [ ]
-Report Date: [ ]
+Project Name: KRPUNE Native (krpune-native)
+API(s) Tested: NOT APPLICABLE - see note below
+Prepared By: Fute Services (derived from source code review)
+Report Date: 2026-07-16
 
-1. EXECUTIVE SUMMARY
-Brief overview of the engagement and overall risk posture.
-[ ]
+NOT APPLICABLE - NO API IN THIS PROJECT
 
-2. SCOPE
-List of API endpoints tested:
-- [ ]
-- [ ]
-- [ ]
+A full source code review of the krpune-native repository (see "4. Mobile App Source Code Review Report") confirmed the app has no backend API of its own. All content (floor plans, amenities, mobility, transport, gallery, VR tour data) is bundled into the app at build time and served locally via src/api/localClient.ts, which only reads from local JSON files - it does not make any network calls. The only outbound network activity found in the code is fetching static images/video from the Cloudinary CDN over HTTPS, which is a public media delivery service, not a project API.
 
-Authentication method(s) used by the API: [ ]
-Environment tested (dev/staging/production): [ ]
-
-3. METHODOLOGY
-Approach used (e.g., OWASP API Security Top 10), black-box/grey-box/white-box.
-[ ]
-
-4. TOOLS USED
-[ ] Postman     [ ] Burp Suite     [ ] OWASP ZAP     [ ] Other: [ ]
-
-5. AREAS TESTED
-- [ ] Authentication and authorization (broken object/function level authorization)
-- [ ] Input validation / injection
-- [ ] Rate limiting
-- [ ] Excessive data exposure
-- [ ] Security misconfiguration
-- [ ] Sensitive data in transit/at rest
-
-6. FINDINGS SUMMARY
-
-| # | Endpoint | Vulnerability | Severity | Status |
-|---|----------|----------------|----------|--------|
-| 1 | [ ]      | [ ]            | [ ]      | [ ]    |
-| 2 | [ ]      | [ ]            | [ ]      | [ ]    |
-
-7. DETAILED FINDINGS
-For each finding, include:
-- Description: [ ]
-- Impact: [ ]
-- Recommendation: [ ]
-- Proof of concept (if applicable): [ ]
-
-8. CONCLUSION
-Overall risk rating and closing remarks.
-[ ]
+Because there is no API to test, this document is submitted as N/A for the IT team's review checklist rather than left blank. If a backend API is introduced later (for example, if the app moves from bundled offline data to a live content-managed backend), an API VAPT should be commissioned at that point using a qualified pentest vendor.
