@@ -23,15 +23,20 @@ Client-side mobile app only (Android/iOS). This app has no backend server of its
 - [ ] Third-party integrations / APIs - none
 - [ ] Internal network segments / VLANs - not applicable, single client app
 
-Note on Cloudinary: a handful of files (src/screens/Home.tsx, Amenities.tsx, Location.tsx) contain
-strings that look like Cloudinary URLs. On closer inspection these are only used as lookup keys
-passed into resolveAsset() (src/offline/resolveAsset.ts), which matches the filename against a
-locally bundled asset map (src/offline/assetMap.ts) and returns the on-device file. All four of
-these specific assets were confirmed present in the local bundle, so no network request is ever
-made for them in normal use. resolveAsset() does have a defensive fallback that would stream from
-the URL directly if an asset were ever missing from the bundle, but that path is not exercised
-today - it exists only so the app does not hard-crash if a future asset is left out of the bundle
-by mistake.
+Note on Cloudinary (corrected 2026-07-16): the original version of this document understated
+this - it named only 3 files and 4 assets. A full grep across src/ found Cloudinary-style URL
+strings in 11 files (src/screens/Home.tsx, Amenities.tsx, Location.tsx, plus 6 bundled JSON data
+files under src/offline/data/ - floors.json, amenities.json, mobility.json, transport.json,
+gallery.json, vr-tour.json - and src/data/FloorData.ts), totaling 149 URL occurrences / 106
+unique asset filenames. On closer inspection these are only used as lookup keys passed into
+resolveAsset() (src/offline/resolveAsset.ts), which matches the filename against a locally
+bundled asset map (src/offline/assetMap.ts, 218 entries) and returns the on-device file. All 106
+unique referenced assets were verified present in the local bundle (diffed against
+assetMap.ts), so no network request is made for any of them in normal use - the original
+conclusion (no network activity) still holds, only the scale of the pattern was wrong.
+resolveAsset() does have a defensive fallback that would stream from the URL directly if an
+asset were ever missing from the bundle, but that path is not exercised today - it exists only
+so the app does not hard-crash if a future asset is left out of the bundle by mistake.
 
 4. NETWORK ZONES
 There is no server-side infrastructure and no live network activity for this app. It is a fully self-contained, offline mobile application - every screen, image, video, and data file ships inside the installed app.

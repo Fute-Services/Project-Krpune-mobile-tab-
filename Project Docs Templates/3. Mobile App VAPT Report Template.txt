@@ -3,8 +3,13 @@ VULNERABILITY ASSESSMENT AND PENETRATION TESTING (VAPT) REPORT
 Template
 
 STATUS (2026-07-16): PENDING - blocked on commissioning a qualified external pentest
-vendor/team to perform dynamic/runtime testing. Not something that can be completed from
-source code review alone; no vendor has been engaged yet as of this date.
+vendor/team to perform dynamic/runtime testing. The fields that CAN be derived from the
+codebase (App Name, Version, Platform, Scope, suggested Methodology) have been pre-filled
+below to save the testing team setup time - marked with [CONFIRM ...] where the tester must
+verify against the actual build. Testing Agency, Testing Period, Report Date, Tools Used,
+Executive Summary, Findings, Retesting Summary, and Conclusion are genuine test outputs and
+CANNOT be filled in until real dynamic/runtime testing is performed - they remain blank/PENDING
+by design, not by oversight.
 
 NOTE (2026-07-16): A static source code review of this app has already been completed - see
 "4. Mobile App Source Code Review Report", which flagged a WebView configuration issue and
@@ -25,30 +30,47 @@ IPC/exported components, and binary-level hardening (obfuscation, tamper/root de
 debuggability). Testers should scope this engagement accordingly rather than skipping it because
 the app has no network traffic to intercept.
 
-Project / App Name: [ ]
-App Version Tested: [ ]
-Platform: [ ] (iOS / Android / Both)
-Testing Agency / Team: [ ]
-Testing Period: [ ] to [ ]
-Report Date: [ ]
+Project / App Name: KR Pune (KRPUNE Native, slug: krpune-native)
+App Version Tested: 1.0.0 [CONFIRM against the actual build handed to testers - versionCode 1]
+Platform: Both (iOS / Android) [CONFIRM which platform(s) the test build actually covers]
+Testing Agency / Team: [ ] - PENDING, not yet commissioned
+Testing Period: [ ] to [ ] - PENDING
+Report Date: [ ] - PENDING (to be set when testing is complete)
 
 1. EXECUTIVE SUMMARY
 Brief overview of the testing engagement and overall risk posture.
-[ ]
+[ ] - PENDING, to be written by the testing team after the engagement
 
 2. SCOPE
-- App package name / bundle ID: [ ]
-- App version(s) tested: [ ]
-- Testing environment: [ ]
-- In-scope features: [ ]
-- Out-of-scope items: [ ]
+- App package name / bundle ID: Android: com.futeservices.krpune (from app.json).
+  iOS: no bundleIdentifier is set in app.json yet - CONFIRM/set this before an iOS test build
+  is prepared.
+- App version(s) tested: 1.0.0 (versionCode 1) - CONFIRM this matches the exact build given to
+  the testing team.
+- Testing environment: [ ] - PENDING (tester should record device models/OS versions used)
+- In-scope features: Based on source code review (src/screens/, 22 screen files), the app's
+  full feature surface is: About Us, Amenities, Blueprint, Circulation Plan, Concept Summary,
+  Construction, Fitout, Gallery, Ground Level, Home, Lobby/Reception, Location, Mobility,
+  Overview, Podium Level, Project Details, Project Info, Sustainability, Terrace Level, Unit
+  Plan, Vertical Transport, VR/Panorama viewer, Walkthrough. Of these, the in-app WebView used
+  by the VR and Panorama viewers
+  (src/panorama/PanoramaViewer.tsx, src/screens/VR.tsx) is the highest-priority component to
+  test dynamically, given the WebView configuration finding in the source code review.
+- Out-of-scope items: There is no backend API or server component to this app (confirmed by
+  source code review and the separate API VAPT report, which is N/A) - API testing is out of
+  scope by design, not by omission.
 
 3. METHODOLOGY
 Describe the testing approach used (e.g., OWASP MASVS/MASTG, black-box/grey-box/white-box).
-[ ]
+Recommended: OWASP MASVS/MASTG. Given a source code review has already been completed (see
+Doc 4) and is available to the testing team, a grey-box or white-box approach is recommended
+over pure black-box, so testers can go straight at the areas already flagged (WebView config,
+dependency advisories) rather than rediscovering them blind. Final methodology choice and
+write-up is PENDING the testing team.
 
 4. TOOLS USED
 [ ] MobSF     [ ] Burp Suite     [ ] Frida     [ ] Drozer     [ ] Other: [ ]
+PENDING - to be checked off by the testing team based on what they actually use.
 
 5. FINDINGS SUMMARY
 

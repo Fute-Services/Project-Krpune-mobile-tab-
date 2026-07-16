@@ -39,7 +39,14 @@ Step 4: No data is ever sent from the device to any server, and no data is ever 
 - [ ] Data masking/anonymization used - not applicable, no personal data is collected
 
 7. THIRD-PARTY DATA SHARING
-None. The app does not contact any external server or third party during normal use. A few image/video references in the code still carry Cloudinary-style URLs from the original web app, but these are only used as filename keys to look up the matching bundled local asset - see the note in "1. Network Architecture Diagram Template.txt" for detail. As a safety net, if a referenced asset were ever missing from the local bundle, the app would fall back to streaming it from that URL - this fallback is not used in the app as currently built.
+None. The app does not contact any external server or third party during normal use. Image/video
+references across 11 source files (3 screens plus 6 bundled JSON data files and one data helper
+- see corrected note in "1. Network Architecture Diagram Template.txt") still carry
+Cloudinary-style URLs from the original web app - 106 unique assets, all confirmed present in
+the local bundle - but these are only used as filename keys to look up the matching bundled
+local asset. As a safety net, if a referenced asset were ever missing from the local bundle, the
+app would fall back to streaming it from that URL - this fallback is not used in the app as
+currently built.
 
 8. DIAGRAM ATTACHMENT
 A drawn version of this flow is available as "Architecture and Data Flow Diagram.md" in this same folder.
