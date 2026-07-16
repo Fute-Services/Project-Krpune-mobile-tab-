@@ -2,6 +2,10 @@ MOBILE APPLICATION
 VULNERABILITY ASSESSMENT AND PENETRATION TESTING (VAPT) REPORT
 Template
 
+STATUS (2026-07-16): PENDING - blocked on commissioning a qualified external pentest
+vendor/team to perform dynamic/runtime testing. Not something that can be completed from
+source code review alone; no vendor has been engaged yet as of this date.
+
 NOTE (2026-07-16): A static source code review of this app has already been completed - see
 "4. Mobile App Source Code Review Report", which flagged a WebView configuration issue and
 some dependency advisories. That review is NOT a substitute for this document. A real VAPT

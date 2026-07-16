@@ -1,6 +1,10 @@
 PROJECT MANAGER / SINGLE POINT OF CONTACT (SPOC) DETAILS
 Template
 
+STATUS (2026-07-16): PENDING - blocked on the project's PM/SPOC supplying their contact
+details. This cannot be filled in from the codebase or documentation; requires input from
+whoever is assigned as the project's point of contact.
+
 Project Name: [ ]
 Date: [ ]
 

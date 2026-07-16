@@ -1,6 +1,10 @@
 NDA / MSA AND KRC
 Cover Sheet
 
+STATUS (2026-07-16): PENDING - blocked on legal/vendor paperwork (signed NDA or MSA, KRC
+compliance documents) being provided by the vendor/party and legal team. This cannot be
+generated from the codebase; requires the actual signed agreements and compliance documents.
+
 Project Name: [ ]
 Vendor / Party Name: [ ]
 Date: [ ]
